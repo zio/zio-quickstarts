@@ -33,7 +33,7 @@ object MainApp extends ZIOAppDefault {
 
       // GET /greet/:name
       case Method.GET -> !! / "greet" / name =>
-        Response.text(s"Hello $name")
+        Response.text(s"Hello $name!")
 
       // GET /greet?name=:name
       case req@(Method.GET -> !! / "greet") =>
