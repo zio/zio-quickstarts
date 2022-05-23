@@ -134,7 +134,7 @@ object MainApp extends ZIOAppDefault {
 
   def run =
     Server.start(
-      port = 8090,
+      port = 8080,
       http = greetingApp ++ downloadApp ++ counterApp ++ userApp
     ).provide(
       // An layer that contains a `Ref[Int]` for the `counterApp`
