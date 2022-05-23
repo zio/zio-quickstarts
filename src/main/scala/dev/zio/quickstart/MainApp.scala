@@ -37,7 +37,6 @@ object MainApp extends ZIOAppDefault {
       // GET /greet/:name
       case Method.GET -> !! / "greet" / name =>
         Response.text(s"Hello $name!")
-
     }
 
   // An http app that: 
