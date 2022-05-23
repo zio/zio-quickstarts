@@ -28,7 +28,7 @@ object MainApp extends ZIOAppDefault {
     Http.collect[Request] {
       // GET /greet?name=:name
       case req@(Method.GET -> !! / "greet") if (req.url.queryParams.nonEmpty) =>
-        Response.text(s"Hello ${req.url.queryParams("name").mkString(", and ")}!")
+        Response.text(s"Hello ${req.url.queryParams("name").mkString(" and ")}!")
 
       // GET /greet
       case Method.GET -> !! / "greet" =>
