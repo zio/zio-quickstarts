@@ -1,6 +1,5 @@
 package dev.zio.quickstart
 
-import io.netty.handler.codec.http.DefaultHttpHeaders
 import zhttp.http._
 import zhttp.service.Server
 import zio._
@@ -56,9 +55,9 @@ object MainApp extends ZIOAppDefault {
               Http.response(
                 Response(
                   Status.Ok,
-                  Headers.make(
-                    new DefaultHttpHeaders()
-                      .add("Content-type", "text/plain")
+                  Headers(
+                    ("Content-Type", "application/octet-stream"),
+                    ("Content-Disposition", s"attachment; filename=${file.getName}")
                   ),
                   HttpData.fromFile(file)
                 )
@@ -70,7 +69,16 @@ object MainApp extends ZIOAppDefault {
       // Download a large file using streams
       // GET /download/stream
       case Method.GET -> !! / "download" / "stream" =>
-        Http.fromStream(ZStream.fromFile(new File("file.txt")))
+        val file = new File("bigfile.txt")
+        Http.fromStream(
+          ZStream.fromFile(file)
+            .schedule(Schedule.spaced(50.millis))
+        ).setHeaders(
+          Headers(
+            ("Content-Type", "application/octet-stream"),
+            ("Content-Disposition", s"attachment; filename=${file.getName}")
+          )
+        )
     }
 
   // An http app that: 
