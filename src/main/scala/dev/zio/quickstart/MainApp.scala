@@ -102,23 +102,25 @@ object MainApp extends ZIOAppDefault {
   //  - Requires an environment (`Ref[mutable.Map[String, User]]`)
   //  - May produce errors of type `Throwable`
   //  - Consume a `Request` and produce a `Response`
-  val userApp: Http[UserRepo, Throwable, Request, Response] =
+  val inmemoryUserApp: Http[UserRepo, Throwable, Request, Response] =
     Http.collectZIO[Request] {
-      // POST /register -d '{"name": "John", "age": 35}'
-      case req@(Method.POST -> !! / "register") =>
+      // POST /users -d '{"name": "John", "age": 35}'
+      case req@(Method.POST -> !! / "users") =>
         for {
           u <- req.bodyAsString.map(_.fromJson[User])
           r <- u match {
             case Left(e) =>
-              ZIO.debug(s"Failed to parse the input: $e").as(Response.text(e))
+              ZIO.debug(s"Failed to parse the input: $e").as(
+                Response.text(e).setStatus(Status.BadRequest)
+              )
             case Right(u) =>
               UserRepo.register(u)
-                .map(id => Response.text(s"Registered ${u.name} with id $id"))
+                .map(id => Response.text(id))
           }
         } yield r
 
-      // GET /user/:id
-      case Method.GET -> !! / "user" / id =>
+      // GET /users/:id
+      case Method.GET -> !! / "users" / id =>
         UserRepo.lookup(id)
           .map {
             case Some(user) =>
@@ -163,7 +165,7 @@ object MainApp extends ZIOAppDefault {
   def run =
     Server.start(
       port = 8080,
-      http = greetingApp ++ downloadApp ++ counterApp ++ userApp
+      http = greetingApp ++ downloadApp ++ counterApp ++ inmemoryUserApp
     ).provide(
       // An layer responsible for storing the state of the `counterApp`
       ZLayer.fromZIO(Ref.make(0)),
