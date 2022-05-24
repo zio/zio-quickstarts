@@ -65,7 +65,6 @@ object MainApp extends ZIOAppDefault {
             else Http.response(Response.status(Status.NotFound))
         } yield r
 
-
       // Download a large file using streams
       // GET /download/stream
       case Method.GET -> !! / "download" / "stream" =>
@@ -103,7 +102,7 @@ object MainApp extends ZIOAppDefault {
   //  - Requires an environment (`Ref[mutable.Map[String, User]]`)
   //  - May produce errors of type `Throwable`
   //  - Consume a `Request` and produce a `Response`
-  val userApp: Http[Ref[mutable.Map[String, User]], Throwable, Request, Response] =
+  val userApp: Http[UserRepo, Throwable, Request, Response] =
     Http.collectZIO[Request] {
       // POST /register -d '{"name": "John", "age": 35}'
       case req@(Method.POST -> !! / "register") =>
@@ -113,40 +112,62 @@ object MainApp extends ZIOAppDefault {
             case Left(e) =>
               ZIO.debug(s"Failed to parse the input: $e").as(Response.text(e))
             case Right(u) =>
-              for {
-                id <- Random.nextUUID
-                users <- ZIO.service[Ref[mutable.Map[String, User]]]
-                _ <- users.update(_ addOne(id.toString, u))
-                _ <- users.get.debug(s"Registered user: $u")
-              } yield Response.text(s"Registered ${u.name} with id $id")
+              UserRepo.register(u)
+                .map(id => Response.text(s"Registered ${u.name} with id $id"))
           }
         } yield r
 
       // GET /user/:id
       case Method.GET -> !! / "user" / id =>
-        for {
-          users <- ZIO.service[Ref[mutable.Map[String, User]]]
-          _ <- users.get.debug(s"users: $users")
-          u <- users.get.map {
-            _.get(id) match {
-              case Some(value) =>
-                Response.json(value.toJson)
-              case None =>
-                Response.status(Status.NotFound)
-            }
+        UserRepo.lookup(id)
+          .map {
+            case Some(user) =>
+              Response.json(user.toJson)
+            case None =>
+              Response.status(Status.NotFound)
           }
-        } yield u
     }
+
+  trait UserRepo {
+    def register(user: User): UIO[String]
+
+    def lookup(id: String): UIO[Option[User]]
+  }
+
+  object UserRepo {
+    def register(user: User): ZIO[UserRepo, Nothing, String] =
+      ZIO.serviceWithZIO[UserRepo](_.register(user))
+
+    def lookup(id: String): ZIO[UserRepo, Nothing, Option[User]] =
+      ZIO.serviceWithZIO[UserRepo](_.lookup(id))
+  }
+
+  case class InmemoryUserRepo(users: Ref[mutable.Map[String, User]]) extends UserRepo {
+    def register(user: User): UIO[String] =
+      for {
+        id <- Random.nextUUID.map(_.toString)
+        _ <- users.updateAndGet(_ addOne(id, user))
+      } yield id
+
+    def lookup(id: String): UIO[Option[User]] =
+      users.get.map(_.get(id))
+  }
+
+  object InmemoryUserRepo {
+    def layer: ZLayer[Any, Nothing, InmemoryUserRepo] =
+      ZLayer.fromZIO(
+        Ref.make(mutable.Map.empty[String, User]).map(new InmemoryUserRepo(_))
+      )
+  }
 
   def run =
     Server.start(
       port = 8080,
       http = greetingApp ++ downloadApp ++ counterApp ++ userApp
     ).provide(
-      // An layer that contains a `Ref[Int]` for the `counterApp`
+      // An layer responsible for storing the state of the `counterApp`
       ZLayer.fromZIO(Ref.make(0)),
-      // An layer that contains a `Ref[mutable.Map[String, User]]` for the `userApp`
-      ZLayer.fromZIO(Ref.make(mutable.Map.empty[String, User]))
+      InmemoryUserRepo.layer
     )
 
 }
