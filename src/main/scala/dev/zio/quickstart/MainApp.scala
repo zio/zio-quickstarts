@@ -3,7 +3,7 @@ package dev.zio.quickstart
 import dev.zio.quickstart.counter.CounterApp
 import dev.zio.quickstart.download.DownloadApp
 import dev.zio.quickstart.greet.GreetingApp
-import dev.zio.quickstart.users.{PersistentUserRepo, UserApp}
+import dev.zio.quickstart.users.{InmemoryUserRepo, PersistentUserRepo, UserApp}
 import zhttp.service.Server
 import zio._
 
@@ -15,6 +15,8 @@ object MainApp extends ZIOAppDefault {
     ).provide(
       // An layer responsible for storing the state of the `counterApp`
       ZLayer.fromZIO(Ref.make(0)),
-      PersistentUserRepo.layer
+      
+      // To use the persistence layer, provide the `PersistentUserRepo.layer` layer instead
+      InmemoryUserRepo.layer
     )
 }
