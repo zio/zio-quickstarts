@@ -7,7 +7,7 @@ import zio._
 import java.util.UUID
 import javax.sql.DataSource
 
-case class UserRow(uuid: UUID, name: String, age: Int)
+case class UserTable(uuid: UUID, name: String, age: Int)
 
 case class PersistentUserRepo(ds: DataSource) extends UserRepo {
   val ctx = new H2ZioJdbcContext(Escape)
@@ -19,8 +19,8 @@ case class PersistentUserRepo(ds: DataSource) extends UserRepo {
       id <- Random.nextUUID
       _ <- ctx.run {
         quote {
-          query[UserRow].insertValue {
-            lift(UserRow(id, user.name, user.age))
+          query[UserTable].insertValue {
+            lift(UserTable(id, user.name, user.age))
           }
         }
       }
@@ -30,7 +30,7 @@ case class PersistentUserRepo(ds: DataSource) extends UserRepo {
   override def lookup(id: String): Task[Option[User]] =
     ctx.run {
       quote {
-        query[UserRow]
+        query[UserTable]
           .filter(p => p.uuid == lift(UUID.fromString(id)))
           .map(u => User(u.name, u.age))
       }
@@ -39,7 +39,7 @@ case class PersistentUserRepo(ds: DataSource) extends UserRepo {
   override def users: Task[List[User]] =
     ctx.run {
       quote {
-        query[UserRow].map(u => User(u.name, u.age))
+        query[UserTable].map(u => User(u.name, u.age))
       }
     }.provideService(ds)
 }
