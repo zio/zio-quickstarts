@@ -2,10 +2,12 @@ package dev.zio.quickstart.greet
 
 import zhttp.http._
 
-// An http app that: 
-//  - Doesn't require any environment
-//  - Doesn't produce any errors
-//  - Consume a `Request` and produce a `Response`
+/**
+ * An http app that: 
+ *   - Accepts a `Request` and returns a `Response`
+ *   - Does not fail
+ *   - Does not use the environment
+ */
 object GreetingApp {
   def apply(): Http[Any, Nothing, Request, Response] =
     Http.collect[Request] {

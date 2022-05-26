@@ -4,10 +4,12 @@ import zhttp.http._
 import zio._
 import zio.stream.ZStream
 
-// An http app that: 
-//  - Doesn't require any environment
-//  - May produce errors of type `Throwable`
-//  - Consume a `Request` and produce a `Response`
+/**
+ * An http app that: 
+ *   - Accepts a `Request` and returns a `Response` 
+ *   - May fail with type of `Throwable`
+ *   - Does not require any environment
+ */
 object DownloadApp {
   def apply(): Http[Any, Throwable, Request, Response] =
     Http.collectHttp[Request] {
