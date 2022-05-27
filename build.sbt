@@ -10,5 +10,6 @@ libraryDependencies ++= Seq(
   "io.getquill"   %% "quill-jdbc-zio"      % "3.17.0-RC3",
   "com.h2database" % "h2"                  % "2.1.212",
   "dev.zio"       %% "zio-config"          % "3.0.0-RC8",
-  "dev.zio"       %% "zio-config-typesafe" % "3.0.0-RC8"
+  "dev.zio"       %% "zio-config-typesafe" % "3.0.0-RC8",
+  "dev.zio"       %% "zio-config-magnolia" % "3.0.0-RC8"
 )
