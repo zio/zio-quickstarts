@@ -18,5 +18,5 @@ object MainApp extends ZIOAppDefault {
       
       // To use the persistence layer, provide the `PersistentUserRepo.layer` layer instead
       InmemoryUserRepo.layer
-    ) *> Console.printLine("Server started on http://localhost:8080")
+    )
 }
