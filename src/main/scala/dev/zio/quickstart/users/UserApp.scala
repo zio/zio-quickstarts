@@ -11,22 +11,13 @@ import zio.json._
  *   - Uses a `UserRepo` as the environment
  */
 object UserApp {
-
-  def logAnnotateCorrelationId(req: Request): ZIOAspect[Nothing, Any, Nothing, Any, Nothing, Any] =
-    new ZIOAspect[Nothing, Any, Nothing, Any, Nothing, Any] {
-      override def apply[R, E, A](zio: ZIO[R, E, A])(implicit trace: ZTraceElement): ZIO[R, E, A] =
-        correlationId(req).flatMap(id => ZIO.logAnnotate("correlation-id", id)(zio))
-
-      def correlationId(req: Request): UIO[String] =
-        ZIO.succeed(req.header("X-Correlation-ID").map(_._2.toString))
-          .flatMap(x => Random.nextUUID.map(uuid => x.getOrElse(uuid.toString)))
-    }
+  import LogAspect._
 
   def apply(): Http[UserRepo, Throwable, Request, Response] =
     Http.collectZIO[Request] {
       // POST /users -d '{"name": "John", "age": 35}'
-      case req@(Method.POST -> !! / "users") =>
-        (for {
+      case req@(Method.POST -> !! / "users") => {
+        for {
           body <- req.bodyAsString
           _ <- ZIO.logInfo(s"POST /users -d $body")
           u = body.fromJson[User]
@@ -36,28 +27,36 @@ object UserApp {
                 Response.text(e).setStatus(Status.BadRequest)
               )
             case Right(u) =>
-              UserRepo.register(u)
-                .map(id => Response.text(id))
+              for {
+                id <- UserRepo.register(u)
+                _ <- ZIO.logInfo(s"User registered: $id")
+              } yield Response.text(id)
+
           }
-        } yield r) @@ logAnnotateCorrelationId(req)
+        } yield r
+      } @@ logSpan("register-user") @@ logAnnotateCorrelationId(req)
 
       // GET /users/:id
-      case req@(Method.GET -> !! / "users" / id) =>
-        ZIO.logInfo(s"Request: GET /users/$id") *>
-          UserRepo.lookup(id)
-            .map {
-              case Some(user) =>
-                Response.json(user.toJson)
-              case None =>
-                Response.status(Status.NotFound)
-            } @@ logAnnotateCorrelationId(req)
+      case req@(Method.GET -> !! / "users" / id) => {
+        for {
+          _ <- ZIO.logInfo(s"Request: GET /users/$id")
+          r <- UserRepo.lookup(id).some.foldZIO(
+            _ => ZIO.log(s"Requested user with $id not found")
+              .as(Response.status(Status.NotFound)),
+            user =>
+              ZIO.log(s"Retrieved the user").as(Response.json(user.toJson))
+          )
+        } yield r
+      } @@ logSpan("get-user") @@ logAnnotateCorrelationId(req)
 
       // GET /users
-      case req@(Method.GET -> !! / "users") =>
-        ZIO.logInfo(s"Request: GET /users") *>
-          UserRepo.users.map { response =>
-            Response.json(response.toJson)
-          } @@ logAnnotateCorrelationId(req)
+      case req@(Method.GET -> !! / "users") => {
+        for {
+          _ <- ZIO.logInfo(s"Request: GET /users")
+          users <- UserRepo.users
+          _ <- ZIO.log(s"Returning ${users.size} users")
+        } yield Response.json(users.toJson)
+      } @@ logSpan("get-users") @@ logAnnotateCorrelationId(req)
     }
 
 }
