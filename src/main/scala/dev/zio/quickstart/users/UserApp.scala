@@ -44,9 +44,12 @@ object UserApp {
       case req@(Method.GET -> !! / "users" / id) => {
         for {
           _ <- ZIO.logInfo(s"Request: GET /users/$id")
-          r <- UserRepo.lookup(id).some.foldZIO(
-            _ => ZIO.log(s"Requested user with $id not found")
-              .as(Response.status(Status.NotFound)),
+          r <- UserRepo.lookup(id).some.foldZIO({
+            case Some(error) => ZIO.logError(s"Failed to lookup user: $error")
+              .as(Response.status(Status.InternalServerError))
+            case None => ZIO.log(s"Requested user with $id not found")
+              .as(Response.status(Status.NotFound))
+          },
             user =>
               ZIO.log(s"Retrieved the user").as(Response.json(user.toJson))
           )
