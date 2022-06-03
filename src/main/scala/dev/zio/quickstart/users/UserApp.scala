@@ -27,11 +27,15 @@ object UserApp {
                 Response.text(e).setStatus(Status.BadRequest)
               )
             case Right(u) =>
-              for {
-                id <- UserRepo.register(u)
-                _ <- ZIO.logInfo(s"User registered: $id")
-              } yield Response.text(id)
-
+              UserRepo.register(u)
+                .foldCauseZIO(
+                  cause =>
+                    ZIO.logError(s"Failed to register user: $cause").as(
+                      Response.status(Status.InternalServerError)
+                    ),
+                  id =>
+                    ZIO.logInfo(s"User registered: $id").as(Response.text(id))
+                )
           }
         } yield r
       } @@ logSpan("register-user") @@ logAnnotateCorrelationId(req)
