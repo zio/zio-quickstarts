@@ -23,18 +23,17 @@ object UserApp {
           u = body.fromJson[User]
           r <- u match {
             case Left(e) =>
-              ZIO.logError(s"Failed to parse the input: $e").as(
-                Response.text(e).setStatus(Status.BadRequest)
-              )
+              ZIO.logErrorCause(s"Failed to parse the input", Cause.fail(e))
+                .as(Response.text(e).setStatus(Status.BadRequest))
             case Right(u) =>
               UserRepo.register(u)
                 .foldCauseZIO(
-                  cause =>
-                    ZIO.logError(s"Failed to register user: $cause").as(
-                      Response.status(Status.InternalServerError)
-                    ),
-                  id =>
-                    ZIO.logInfo(s"User registered: $id").as(Response.text(id))
+                  failure =>
+                    ZIO.logErrorCause(s"Failed to register user", Cause.fail(failure))
+                      .as(Response.status(Status.InternalServerError)),
+                  success =>
+                    ZIO.logInfo(s"User registered: $success")
+                      .as(Response.text(success))
                 )
           }
         } yield r
@@ -45,13 +44,16 @@ object UserApp {
         for {
           _ <- ZIO.logInfo(s"Request: GET /users/$id")
           r <- UserRepo.lookup(id).some.foldZIO({
-            case Some(error) => ZIO.logError(s"Failed to lookup user: $error")
-              .as(Response.status(Status.InternalServerError))
-            case None => ZIO.log(s"Requested user with $id not found")
-              .as(Response.status(Status.NotFound))
+            case Some(error) =>
+              ZIO.logErrorCause(s"Failed to lookup user.", Cause.fail(error))
+                .as(Response.status(Status.InternalServerError))
+            case None =>
+              ZIO.log(s"Requested user with $id not found")
+                .as(Response.status(Status.NotFound))
           },
-            user =>
-              ZIO.log(s"Retrieved the user").as(Response.json(user.toJson))
+            success =>
+              ZIO.log(s"Retrieved the user")
+                .as(Response.json(success.toJson))
           )
         } yield r
       } @@ logSpan("get-user") @@ logAnnotateCorrelationId(req)
@@ -60,9 +62,15 @@ object UserApp {
       case req@(Method.GET -> !! / "users") => {
         for {
           _ <- ZIO.logInfo(s"Request: GET /users")
-          users <- UserRepo.users
-          _ <- ZIO.log(s"Returning ${users.size} users")
-        } yield Response.json(users.toJson)
+          users <- UserRepo.users.foldCauseZIO(
+            failure =>
+              ZIO.logErrorCause(s"Failed to retrieve users.", failure)
+                .as(Response.status(Status.InternalServerError)),
+            success =>
+              ZIO.log(s"Retrieved users successfully: response length=${success.length}")
+                .as(Response.json(success.toJson))
+          )
+        } yield users
       } @@ logSpan("get-users") @@ logAnnotateCorrelationId(req)
     }
 
