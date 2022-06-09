@@ -1,7 +1,7 @@
 package dev.zio.quickstart.users
 
 import zhttp.http.Request
-import zio.{Random, UIO, ZIO, ZIOAspect, ZTraceElement}
+import zio._
 
 object LogAspect {
 
@@ -10,7 +10,7 @@ object LogAspect {
   ): ZIOAspect[Nothing, Any, Nothing, Any, Nothing, Any] =
     new ZIOAspect[Nothing, Any, Nothing, Any, Nothing, Any] {
       override def apply[R, E, A](zio: ZIO[R, E, A])(implicit
-          trace: ZTraceElement
+          trace: Trace
       ): ZIO[R, E, A] =
         ZIO.logSpan(label)(zio)
     }
@@ -21,7 +21,7 @@ object LogAspect {
     new ZIOAspect[Nothing, Any, Nothing, Any, Nothing, Any] {
       override def apply[R, E, A](
           zio: ZIO[R, E, A]
-      )(implicit trace: ZTraceElement): ZIO[R, E, A] =
+      )(implicit trace: Trace): ZIO[R, E, A] =
         correlationId(req).flatMap(id =>
           ZIO.logAnnotate("correlation-id", id)(zio)
         )
