@@ -12,4 +12,6 @@ libraryDependencies ++= Seq(
   "dev.zio" %% "zio-logging" % "2.0.0-RC10",
   "dev.zio" %% "zio-logging-slf4j" % "2.0.0-RC10",
   "org.slf4j" % "slf4j-simple" % "1.7.36",
+  //  "org.slf4j" % "slf4j-reload4j" % "1.7.36"  
+  //  "ch.qos.logback" % "logback-classic" % "1.2.11",
 )
