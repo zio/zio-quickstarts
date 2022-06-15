@@ -1,5 +1,6 @@
 package dev.zio.quickstart.users
 
+import dev.zio.quickstart._
 import zhttp.http._
 import zio._
 import zio.json._
@@ -15,7 +16,7 @@ object UserApp {
     Http.collectZIO[Request] {
       // POST /users -d '{"name": "John", "age": 35}'
       case req@(Method.POST -> !! / "users") =>
-        for {
+        (for {
           u <- req.bodyAsString.map(_.fromJson[User])
           r <- u match {
             case Left(e) =>
@@ -26,7 +27,7 @@ object UserApp {
               UserRepo.register(u)
                 .map(id => Response.text(id))
           }
-        } yield r
+        } yield r) @@ countAllRequests("post", "/users")
 
       // GET /users/:id
       case Method.GET -> !! / "users" / id =>
@@ -36,10 +37,13 @@ object UserApp {
               Response.json(user.toJson)
             case None =>
               Response.status(Status.NotFound)
-          }
+          } @@ countAllRequests("get", "/users/:id")
+
       // GET /users
       case Method.GET -> !! / "users" =>
-        UserRepo.users.map(response => Response.json(response.toJson))
+        UserRepo.users
+          .map(response => Response.json(response.toJson)) @@
+          countAllRequests("get", "/users")
     }
 
 }
