@@ -4,11 +4,11 @@ name         := "zio-quickstart-restful-webservice"
 version      := "0.1.0"
 
 libraryDependencies ++= Seq(
-  "dev.zio"       %% "zio"            % "2.0.0-RC5",
-  "dev.zio"       %% "zio-json"       % "0.3.0-RC7",
-  "io.d11"        %% "zhttp"          % "2.0.0-RC7",
-  "io.getquill"   %% "quill-zio"      % "3.17.0-RC3",
-  "io.getquill"   %% "quill-jdbc-zio" % "3.17.0-RC3",
+  "dev.zio"       %% "zio"            % "2.0.0-RC6",
+  "dev.zio"       %% "zio-json"       % "0.3.0-RC8",
+  "io.d11"        %% "zhttp"          % "2.0.0-RC9",
+  "io.getquill"   %% "quill-zio"      % "3.17.0-RC2",
+  "io.getquill"   %% "quill-jdbc-zio" % "3.17.0-RC2",
   "com.h2database" % "h2"             % "2.1.212"
 )
 
