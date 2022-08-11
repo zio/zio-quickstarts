@@ -1,7 +1,7 @@
 package dev.zio.quickstart.users
 
 import io.getquill.context.ZioJdbc.DataSourceLayer
-import io.getquill.{Escape, H2ZioJdbcContext}
+import io.getquill._
 import zio._
 
 import java.util.UUID
