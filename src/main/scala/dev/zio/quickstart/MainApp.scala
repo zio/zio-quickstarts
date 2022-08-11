@@ -10,7 +10,7 @@ import zio._
 object MainApp extends ZIOAppDefault {
   def run =
     Server.start(
-      port = 8080,
+      port = 8999,
       http = GreetingApp() ++ DownloadApp() ++ CounterApp() ++ UserApp()
     ).provide(
       // An layer responsible for storing the state of the `counterApp`
