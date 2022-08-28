@@ -1,6 +1,6 @@
 package dev.zio.quickstart.greet
 
-import zhttp.http._
+import zhttp.http.*
 
 /**
  * An http app that: 
@@ -8,7 +8,7 @@ import zhttp.http._
  *   - Does not fail
  *   - Does not use the environment
  */
-object GreetingApp {
+object GreetingApp:
   def apply(): Http[Any, Nothing, Request, Response] =
     Http.collect[Request] {
       // GET /greet?name=:name
@@ -23,4 +23,3 @@ object GreetingApp {
       case Method.GET -> !! / "greet" / name =>
         Response.text(s"Hello $name!")
     }
-}

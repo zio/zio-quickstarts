@@ -3,20 +3,21 @@ package dev.zio.quickstart.users
 import io.getquill.context.ZioJdbc.DataSourceLayer
 import io.getquill.{Escape, H2ZioJdbcContext}
 import io.getquill.jdbczio.Quill
-import zio._
+import io.getquill.*
+import zio.*
 
 import java.util.UUID
 import javax.sql.DataSource
 
 case class UserTable(uuid: UUID, name: String, age: Int)
 
-case class PersistentUserRepo(ds: DataSource) extends UserRepo {
+case class PersistentUserRepo(ds: DataSource) extends UserRepo:
   val ctx = new H2ZioJdbcContext(Escape)
 
   import ctx._
 
   override def register(user: User): Task[String] = {
-    for {
+    for
       id <- Random.nextUUID
       _ <- ctx.run {
         quote {
@@ -25,7 +26,7 @@ case class PersistentUserRepo(ds: DataSource) extends UserRepo {
           }
         }
       }
-    } yield id.toString
+    yield id.toString
   }.provide(ZLayer.succeed(ds))
 
   override def lookup(id: String): Task[Option[User]] =
@@ -43,10 +44,8 @@ case class PersistentUserRepo(ds: DataSource) extends UserRepo {
         query[UserTable].map(u => User(u.name, u.age))
       }
     }.provide(ZLayer.succeed(ds))
-}
 
-object PersistentUserRepo {
+object PersistentUserRepo:
   def layer: ZLayer[Any, Throwable, PersistentUserRepo] =
     Quill.DataSource.fromPrefix("UserApp") >>>
       ZLayer.fromFunction(PersistentUserRepo(_))
-}

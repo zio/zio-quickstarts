@@ -1,7 +1,7 @@
 package dev.zio.quickstart.download
 
-import zhttp.http._
-import zio._
+import zhttp.http.*
+import zio.*
 import zio.stream.ZStream
 
 /**
@@ -10,7 +10,7 @@ import zio.stream.ZStream
  *   - May fail with type of `Throwable`
  *   - Does not require any environment
  */
-object DownloadApp {
+object DownloadApp:
   def apply(): Http[Any, Throwable, Request, Response] =
     Http.collectHttp[Request] {
       // GET /download
@@ -37,4 +37,3 @@ object DownloadApp {
           )
         )
     }
-}

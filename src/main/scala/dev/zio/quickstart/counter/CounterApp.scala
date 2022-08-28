@@ -1,6 +1,6 @@
 package dev.zio.quickstart.counter
 
-import zhttp.http._
+import zhttp.http.*
 import zio.{Ref, ZIO}
 
 /**
@@ -9,7 +9,7 @@ import zio.{Ref, ZIO}
  *  - Does not fail
  *  - Requires the `Ref[Int]` as the environment
  */
-object CounterApp {
+object CounterApp:
   def apply(): Http[Ref[Int], Nothing, Request, Response] =
     Http.fromZIO(ZIO.service[Ref[Int]]).flatMap { ref =>
       Http.collectZIO[Request] {
@@ -23,4 +23,3 @@ object CounterApp {
           ref.get.map(_.toString).map(Response.text)
       }
     }
-}
