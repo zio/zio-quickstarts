@@ -1,8 +1,8 @@
 package dev.zio.quickstart.users
 
-import zhttp.http._
-import zio._
-import zio.json._
+import zhttp.http.*
+import zio.*
+import zio.json.*
 
 /**
  * An http app that: 
@@ -10,14 +10,14 @@ import zio.json._
  *   - May fail with type of `Throwable`
  *   - Uses a `UserRepo` as the environment
  */
-object UserApp {
+object UserApp:
   def apply(): Http[UserRepo, Throwable, Request, Response] =
     Http.collectZIO[Request] {
       // POST /users -d '{"name": "John", "age": 35}'
       case req@(Method.POST -> !! / "users") =>
-        for {
+        for
           u <- req.bodyAsString.map(_.fromJson[User])
-          r <- u match {
+          r <- u match
             case Left(e) =>
               ZIO.debug(s"Failed to parse the input: $e").as(
                 Response.text(e).setStatus(Status.BadRequest)
@@ -25,8 +25,7 @@ object UserApp {
             case Right(u) =>
               UserRepo.register(u)
                 .map(id => Response.text(id))
-          }
-        } yield r
+        yield r
 
       // GET /users/:id
       case Method.GET -> !! / "users" / id =>
@@ -42,4 +41,3 @@ object UserApp {
         UserRepo.users.map(response => Response.json(response.toJson))
     }
 
-}

@@ -1,13 +1,12 @@
 package dev.zio.quickstart.users
 
 import java.util.UUID
-import zio.json._
+import zio.json.*
 
 case class User(name: String, age: Int)
 
-object User {
-  implicit val encoder: JsonEncoder[User] =
+object User:
+  given JsonEncoder[User] =
     DeriveJsonEncoder.gen[User]
-  implicit val decoder: JsonDecoder[User] =
+  given JsonDecoder[User] =
     DeriveJsonDecoder.gen[User]
-}

@@ -1,16 +1,15 @@
 package dev.zio.quickstart.users
 
-import zio._
+import zio.*
 
-trait UserRepo {
+trait UserRepo:
   def register(user: User): Task[String]
 
   def lookup(id: String): Task[Option[User]]
   
   def users: Task[List[User]]
-}
 
-object UserRepo {
+object UserRepo:
   def register(user: User): ZIO[UserRepo, Throwable, String] =
     ZIO.serviceWithZIO[UserRepo](_.register(user))
 
@@ -19,5 +18,4 @@ object UserRepo {
 
   def users: ZIO[UserRepo, Throwable, List[User]] =
     ZIO.serviceWithZIO[UserRepo](_.users)
-}
 
