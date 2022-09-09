@@ -16,7 +16,7 @@ object UserApp:
       // POST /users -d '{"name": "John", "age": 35}'
       case req@(Method.POST -> !! / "users") =>
         for
-          u <- req.bodyAsString.map(_.fromJson[User])
+          u <- req.body.asString.map(_.fromJson[User])
           r <- u match
             case Left(e) =>
               ZIO.debug(s"Failed to parse the input: $e").as(
