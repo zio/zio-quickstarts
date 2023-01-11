@@ -1,21 +1,29 @@
 package dev.zio.quickstart
 
-import dev.zio.quickstart.counter.CounterApp
-import dev.zio.quickstart.download.DownloadApp
 import dev.zio.quickstart.greet.GreetingApp
-import dev.zio.quickstart.users.{InmemoryUserRepo, PersistentUserRepo, UserApp}
+import dev.zio.quickstart.users.{User, UserApp, UserRepo, UserService}
+import io.github.mbannour.{MongoZioClient, MongoZioCollection}
 import zhttp.service.Server
-import zio.*
+import zio._
 
-object MainApp extends ZIOAppDefault:
-  def run: ZIO[Environment with ZIOAppArgs with Scope,Any,Any] =
+object MainApp extends ZIOAppDefault {
+  def run: ZIO[Environment with ZIOAppArgs with Scope, Any, Any] = {
+
+    val userCollection = MongoZioClient
+      .autoCloseableClient("mongodb://localhost:27017")
+      .map { client =>
+        val db = client.getDatabase("ziodb").withCodecRegistry(UserRepo.codecRegistry)
+        db.getCollection[User]("test")
+      }
+
     Server.start(
       port = 8080,
-      http = GreetingApp() ++ DownloadApp() ++ CounterApp() ++ UserApp()
+      http = UserApp() ++ GreetingApp.authenticate(GreetingApp.apply)
     ).provide(
-      // An layer responsible for storing the state of the `counterApp`
-      ZLayer.fromZIO(Ref.make(0)),
-      
-      // To use the persistence layer, provide the `PersistentUserRepo.layer` layer instead
-      InmemoryUserRepo.layer 
+      UserService.layer,
+      UserRepo.layer,
+      ZLayer.fromZIO(userCollection),
+      Scope.default
     )
+  }
+}
