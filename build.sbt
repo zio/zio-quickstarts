@@ -1,4 +1,4 @@
-scalaVersion := "3.1.3"
+scalaVersion := "3.2.2"
 organization := "dev.zio"
 name         := "zio-quickstart-restful-webservice"
 
