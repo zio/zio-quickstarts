@@ -1,6 +1,7 @@
 package dev.zio.quickstart.greet
 
-import zhttp.http._
+import zio.http._
+import zio.http.model.Method
 
 /**
  * An http app that: 

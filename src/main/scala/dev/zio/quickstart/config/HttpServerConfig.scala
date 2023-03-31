@@ -1,20 +1,23 @@
 package dev.zio.quickstart.config
 
-import zio._
-import zio.config._
-import zio.config.magnolia.descriptor
-import zio.config.typesafe.TypesafeConfigSource
+import zio.Config
+import zio.config.magnolia.deriveConfig
 
-case class HttpServerConfig(host: String, port: Int)
+case class HttpServerConfig(host: String, port: Int, nThreads: Int)
 
 object HttpServerConfig {
-  val layer: ZLayer[Any, ReadError[String], HttpServerConfig] =
-    ZLayer {
-      read {
-        descriptor[HttpServerConfig].from(
-          TypesafeConfigSource.fromResourcePath
-            .at(PropertyTreePath.$("HttpServerConfig"))
-        )
+  // Automatic Config Derivation
+  // Import zio.config.magnolia for automatic derivation
+  val config: Config[HttpServerConfig] =
+    deriveConfig[HttpServerConfig].nested("HttpServerConfig")
+
+  // Manual Config Derivation
+  val config_manual: Config[HttpServerConfig] =
+    (Config.int.nested("port") ++
+      Config.string.nested("host") ++
+      Config.int.nested("nThreads"))
+      .map { case (port, host, nThreads) =>
+        HttpServerConfig(host, port, nThreads)
       }
-    }
+      .nested("HttpServerConfig")
 }

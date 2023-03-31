@@ -4,25 +4,45 @@ import dev.zio.quickstart.config.HttpServerConfig
 import dev.zio.quickstart.counter.CounterApp
 import dev.zio.quickstart.download.DownloadApp
 import dev.zio.quickstart.greet.GreetingApp
-import dev.zio.quickstart.users.{InmemoryUserRepo, UserApp}
-import zhttp.service.Server
+import dev.zio.quickstart.users.{InmemoryUserRepo, UserApp, UserRepo}
 import zio._
+import zio.config.typesafe.TypesafeConfigProvider
+import zio.http._
+
+import java.net.InetSocketAddress
 
 object MainApp extends ZIOAppDefault {
-  def run =
-    ZIO.service[HttpServerConfig].flatMap { config =>
-      Server.start(
-        port = config.port,
-        http = GreetingApp() ++ DownloadApp() ++ CounterApp() ++ UserApp()
-      )
-    }.provide(
-      // A layer responsible for storing the state of the `counterApp`
-      ZLayer.fromZIO(Ref.make(0)),
-
-      // To use the persistence layer, provide the `PersistentUserRepo.layer` layer instead
-      InmemoryUserRepo.layer,
-     
-      // A layer containing the configuration of the http server
-      HttpServerConfig.layer
+  override val bootstrap: ZLayer[ZIOAppArgs, Any, Any] =
+    Runtime.setConfigProvider(
+      TypesafeConfigProvider
+        .fromResourcePath()
     )
+
+  val myApp: Http[UserRepo with Ref[Int], Nothing, Request, Response] =
+    GreetingApp() ++ DownloadApp() ++ CounterApp() ++ UserApp()
+
+  val serverConfig: ZLayer[Any, Config.Error, ServerConfig] =
+    ZLayer
+      .fromZIO(
+        ZIO.config[HttpServerConfig](HttpServerConfig.config).map { c =>
+          ServerConfig(
+            address = new InetSocketAddress(c.port),
+            nThreads = c.nThreads
+          )
+        }
+      )
+
+  def run =
+    Server
+      .serve(myApp)
+      .provide(
+        serverConfig,
+        Server.live,
+
+        // A layer responsible for storing the state of the `counterApp`
+        ZLayer.fromZIO(Ref.make(0)),
+
+        // To use the persistence layer, provide the `PersistentUserRepo.layer` layer instead
+        InmemoryUserRepo.layer
+      )
 }
