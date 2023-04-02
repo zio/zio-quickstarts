@@ -17,3 +17,5 @@ lazy val `zio-quickstart-restful-webservice` =
         "com.h2database" % "h2"             % "2.1.214"
       )
     )
+
+lazy val `zio-quickstart-restful-webservice-configurable-app` = project
