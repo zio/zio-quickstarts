@@ -33,8 +33,11 @@ object MainApp extends ZIOAppDefault {
       )
 
   def run =
-    Server
-      .serve(myApp)
+    (Server
+      .install(myApp)
+      .flatMap(port =>
+        Console.printLine(s"Started server on port: $port")
+      ) *> ZIO.never)
       .provide(
         serverConfig,
         Server.live,
