@@ -1,20 +1,12 @@
-# ZIO Quickstart: Building RESTful Web Service
+# ZIO Quickstarts
 
-This is the simple quickstart for writing a RESTful ZIO Web Service. You can download and run it very quickly. This will give you an idea of how to write similar apps.
+This repository contains a collection of quickstarts for ZIO. Each quickstart is a self-contained project that demonstrates a particular aspect of ZIO. The quickstarts are designed to be easy to run and explore.
 
-This quickstart shows how to build a simple RESTful web service using ZIO. It uses
-- [ZIO HTTP](https://dream11.github.io/zio-http/) for the HTTP server
-- [ZIO JSON](https://zio.github.io/zio-json/) for the JSON serialization
-- [ZIO Logging](https://zio.github.io/zio-logging/) for integrate logging with slf4j
-- [ZIO Config](https://zio.github.io/zio-config/) for loading configuration data
+To learn about each quickstart, we have a dedicated article about it at the ZIO documentation website. You can find the list of quickstart articles [here](https://zio.dev/guides/#quickstart-guides).
 
-## Quickstart Guide
+## Running Quickstarts
 
-We have a dedicated article about this quickstart at the ZIO documentation website called [ZIO Quickstart: Building RESTful Web Service](https://zio.dev/next/quickstarts/restful-webservice)
-
-## Running The Example
-
-First, open the console and clone the project using `git` (or you can simply download the project) and then change the directory:
+First, open the console and clone the project using `git` (or you can simply download the project) and then to the directory of the quickstart you want to run, e.g. `zio-quickstart-restful-webservice`:
 
 ```scala
 git clone git@github.com:zio/zio-quickstart-restful-webservice.git 
