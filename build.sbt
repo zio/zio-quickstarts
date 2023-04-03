@@ -26,7 +26,8 @@ lazy val root =
       `zio-quickstart-restful-webservice-custom-logger`,
       `zio-quickstart-restful-webservice-dockerize`,
       `zio-quickstart-restful-webservice-logging`,
-      `zio-quickstart-restful-webservice-metrics`
+      `zio-quickstart-restful-webservice-metrics`,
+      `zio-quickstart-kafka`
     )
 
 lazy val `zio-quickstart-hello-world`                         = project
