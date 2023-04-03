@@ -14,5 +14,5 @@ enablePlugins(DockerPlugin)
 
 dockerExposedPorts := Seq(8080)
 
-dockerUsername := sys.props.get("docker.username")
+dockerUsername   := sys.props.get("docker.username")
 dockerRepository := sys.props.get("docker.registry")
