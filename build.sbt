@@ -27,7 +27,8 @@ lazy val root =
       `zio-quickstart-restful-webservice-dockerize`,
       `zio-quickstart-restful-webservice-logging`,
       `zio-quickstart-restful-webservice-metrics`,
-      `zio-quickstart-kafka`
+      `zio-quickstart-kafka`,
+      `zio-quickstart-graphql-webservice`
     )
 
 lazy val `zio-quickstart-hello-world`                         = project
@@ -38,4 +39,4 @@ lazy val `zio-quickstart-restful-webservice-dockerize`        = project
 lazy val `zio-quickstart-restful-webservice-logging`          = project
 lazy val `zio-quickstart-restful-webservice-metrics`          = project
 lazy val `zio-quickstart-kafka`                               = project
-lazy val `zio-quickstart-graphql`                             = project
+lazy val `zio-quickstart-graphql-webservice`                  = project
