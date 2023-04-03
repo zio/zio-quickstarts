@@ -37,8 +37,6 @@ jobs:
       run: sbt +Test/compile
     - name: Check artifacts build process
       run: sbt +publishLocal
-    - name: Check website build process
-      run: sbt docs/clean; sbt docs/buildWebsite
   lint:
     name: Lint
     runs-on: ubuntu-latest

@@ -2,15 +2,16 @@ enablePlugins(ZioSbtEcosystemPlugin)
 
 inThisBuild(
   List(
-    name               := "ZIO Quickstarts",
-    organization       := "dev.zio",
-    ciTestJobs         := Seq.empty,
-    ciUpdateReadmeJobs := Seq.empty,
-    ciReleaseJobs      := Seq.empty,
-    ciPostReleaseJobs  := Seq.empty,
-    scalaVersion       := "2.13.8",
-    semanticdbEnabled  := true,
-    semanticdbVersion  := scalafixSemanticdb.revision,
+    name                       := "ZIO Quickstarts",
+    organization               := "dev.zio",
+    ciTestJobs                 := Seq.empty,
+    ciUpdateReadmeJobs         := Seq.empty,
+    ciReleaseJobs              := Seq.empty,
+    ciPostReleaseJobs          := Seq.empty,
+    ciCheckWebsiteBuildProcess := Seq.empty,
+    scalaVersion               := "2.13.8",
+    semanticdbEnabled          := true,
+    semanticdbVersion          := scalafixSemanticdb.revision,
     scalacOptions ++= optionsOn("3")("-Ywarn-unused-import").value
   )
 )
