@@ -4,14 +4,17 @@ inThisBuild(
   List(
     name                       := "ZIO Quickstarts",
     organization               := "dev.zio",
-    ciTestJobs                 := Seq.empty,
     ciUpdateReadmeJobs         := Seq.empty,
     ciReleaseJobs              := Seq.empty,
     ciPostReleaseJobs          := Seq.empty,
     ciCheckWebsiteBuildProcess := Seq.empty,
     scalaVersion               := "2.13.8",
-    semanticdbEnabled          := true,
-    semanticdbVersion          := scalafixSemanticdb.revision,
+    ciTargetScalaVersions := makeTargetScalaMap(
+      `zio-quickstart-encode-decode-json`
+    ).value,
+    ciDefaultTargetJavaVersions := Seq("8"),
+    semanticdbEnabled           := true,
+    semanticdbVersion           := scalafixSemanticdb.revision,
     scalacOptions ++= optionsOn("3")("-Ywarn-unused-import").value
   )
 )
@@ -29,7 +32,8 @@ lazy val root =
       `zio-quickstart-restful-webservice-metrics`,
       `zio-quickstart-kafka`,
       `zio-quickstart-graphql-webservice`,
-      `zio-quickstart-streams`
+      `zio-quickstart-streams`,
+      `zio-quickstart-encode-decode-json`
     )
 
 lazy val `zio-quickstart-hello-world`                         = project
@@ -42,3 +46,4 @@ lazy val `zio-quickstart-restful-webservice-metrics`          = project
 lazy val `zio-quickstart-kafka`                               = project
 lazy val `zio-quickstart-graphql-webservice`                  = project
 lazy val `zio-quickstart-streams`                             = project
+lazy val `zio-quickstart-encode-decode-json`                  = project

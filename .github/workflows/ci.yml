@@ -60,12 +60,41 @@ jobs:
       run: sbt ciCheckGithubWorkflow
     - name: Lint
       run: sbt lint
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    strategy:
+      fail-fast: false
+      matrix:
+        java:
+        - '8'
+        scala-project:
+        - ++2.13.8 zio-quickstart-encode-decode-json
+    steps:
+    - name: Install libuv
+      run: sudo apt-get update && sudo apt-get install -y libuv1-dev
+    - name: Setup Scala
+      uses: actions/setup-java@v3.10.0
+      with:
+        distribution: temurin
+        java-version: ${{ matrix.java }}
+        check-latest: true
+    - name: Cache Dependencies
+      uses: coursier/cache-action@v6
+    - name: Git Checkout
+      uses: actions/checkout@v3.3.0
+      with:
+        fetch-depth: '0'
+    - name: Test
+      run: sbt ${{ matrix.scala-project }}/test
   ci:
     name: ci
     runs-on: ubuntu-latest
     continue-on-error: false
     needs:
     - lint
+    - test
     - build
     steps:
     - name: Report Successful CI
