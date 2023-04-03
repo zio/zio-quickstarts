@@ -14,8 +14,7 @@ inThisBuild(
     ).value,
     ciDefaultTargetJavaVersions := Seq("8"),
     semanticdbEnabled           := true,
-    semanticdbVersion           := scalafixSemanticdb.revision,
-    scalacOptions ++= optionsOn("3")("-Ywarn-unused-import").value
+    semanticdbVersion           := scalafixSemanticdb.revision
   )
 )
 
