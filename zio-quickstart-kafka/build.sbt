@@ -5,6 +5,6 @@ val `zio-quickstart-kafka` =
   )
 
 libraryDependencies ++= Seq(
-  "dev.zio" %% "zio-kafka" % "2.0.0-M3",
+  "dev.zio" %% "zio-kafka" % "2.2",
   "dev.zio" %% "zio-json"  % "0.3.0-RC7"
 )
