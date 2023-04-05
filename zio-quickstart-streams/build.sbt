@@ -4,5 +4,5 @@ organization := "dev.zio"
 libraryDependencies ++= Seq(
   "dev.zio" %% "zio"         % "2.0.0",
   "dev.zio" %% "zio-test"    % "2.0.0" % Test,
-  "dev.zio" %% "zio-streams" % "2.0.0"
+  "dev.zio" %% "zio-streams" % "2.0.10"
 )
