@@ -1,7 +1,7 @@
 scalaVersion := "3.2.2"
 
 libraryDependencies ++= Seq(
-  "dev.zio"       %% "zio"            % "2.0.1",
+  "dev.zio"       %% "zio"            % "2.0.11",
   "dev.zio"       %% "zio-json"       % "0.5.0",
   "io.d11"        %% "zhttp"          % "2.0.0-RC10",
   "io.getquill"   %% "quill-zio"      % "4.3.0",
