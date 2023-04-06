@@ -3,7 +3,7 @@ organization := "dev.zio"
 name         := "zio-quickstart-restful-webservice"
 
 libraryDependencies ++= Seq(
-  "dev.zio"       %% "zio"                    % "2.0.0-RC5",
+  "dev.zio"       %% "zio"                    % "2.0.11",
   "dev.zio"       %% "zio-metrics-connectors" % "2.0.7",
   "dev.zio"       %% "zio-json"               % "0.5.0",
   "io.d11"        %% "zhttp"                  % "2.0.0-RC9",
