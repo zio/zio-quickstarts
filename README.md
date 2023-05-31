@@ -9,8 +9,8 @@ To learn about each quickstart, we have a dedicated article about it at the ZIO 
 First, open the console and clone the project using `git` (or you can simply download the project) and then to the directory of the quickstart you want to run, e.g. `zio-quickstart-restful-webservice`:
 
 ```scala
-git clone git@github.com:zio/zio-quickstart-restful-webservice.git 
-cd zio-quickstart-restful-webservice
+git clone git@github.com:zio/zio-quickstarts.git 
+cd zio-quickstarts/zio-quickstart-restful-webservice
 ```
 
 Once you are inside the project directory, run the application:
