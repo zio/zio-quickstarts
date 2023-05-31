@@ -1,4 +1,6 @@
-lazy val `zio-quickstart-hello-world` =
-  project
-    .settings(stdSettings())
-    .settings(enableZIO())
+scalaVersion := "2.13.8"
+organization := "dev.zio"
+
+libraryDependencies ++= Seq(
+  "dev.zio" %% "zio" % "2.0.13"
+)
