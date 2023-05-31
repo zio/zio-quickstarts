@@ -14,6 +14,10 @@ project/metals.sbt
 project/project/
 project/target/
 target/
+*/project/build.properties
+*/project/project
+*/project/target
+*/target
 
 # eclipse
 build/
