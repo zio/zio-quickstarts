@@ -1,7 +1,8 @@
 package dev.zio.quickstart.download
 
-import zhttp.http._
 import zio._
+import zio.http._
+import zio.http.model._
 import zio.stream.ZStream
 
 /** An http app that:
@@ -19,8 +20,8 @@ object DownloadApp {
           .fromStream(ZStream.fromResource(fileName))
           .setHeaders(
             Headers(
-              ("Content-Type", "application/octet-stream"),
-              ("Content-Disposition", s"attachment; filename=${fileName}")
+              Header("Content-Type", "application/octet-stream"),
+              Header("Content-Disposition", s"attachment; filename=${fileName}")
             )
           )
 
@@ -36,8 +37,8 @@ object DownloadApp {
           )
           .setHeaders(
             Headers(
-              ("Content-Type", "application/octet-stream"),
-              ("Content-Disposition", s"attachment; filename=${file}")
+              Header("Content-Type", "application/octet-stream"),
+              Header("Content-Disposition", s"attachment; filename=${file}")
             )
           )
     }

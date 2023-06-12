@@ -1,6 +1,7 @@
 package dev.zio.quickstart.counter
 
-import zhttp.http._
+import zio.http._
+import zio.http.model._
 import zio.{Ref, ZIO}
 
 /** An http app that:

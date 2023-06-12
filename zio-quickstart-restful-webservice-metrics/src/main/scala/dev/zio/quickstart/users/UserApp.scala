@@ -1,9 +1,10 @@
 package dev.zio.quickstart.users
 
-import dev.zio.quickstart._
-import zhttp.http._
 import zio._
+import zio.http._
+import zio.http.model._
 import zio.json._
+import dev.zio.quickstart._
 
 /** An http app that:
   *   - Accepts a `Request` and returns a `Response`
@@ -16,7 +17,7 @@ object UserApp {
       // POST /users -d '{"name": "John", "age": 35}'
       case req @ (Method.POST -> !! / "users") =>
         (for {
-          u <- req.bodyAsString.map(_.fromJson[User])
+          u <- req.body.asString.map(_.fromJson[User])
           r <- u match {
             case Left(e) =>
               ZIO
