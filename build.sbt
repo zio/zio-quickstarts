@@ -36,6 +36,7 @@ lazy val root =
     )
 
 lazy val `zio-quickstart-hello-world`                         = project
+lazy val `zio-quickstart-junit-integration`                   = project
 lazy val `zio-quickstart-restful-webservice`                  = project
 lazy val `zio-quickstart-restful-webservice-configurable-app` = project
 lazy val `zio-quickstart-restful-webservice-custom-logger`    = project
