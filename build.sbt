@@ -47,3 +47,4 @@ lazy val `zio-quickstart-kafka`                               = project
 lazy val `zio-quickstart-graphql-webservice`                  = project
 lazy val `zio-quickstart-streams`                             = project
 lazy val `zio-quickstart-encode-decode-json`                  = project
+lazy val `zio-quickstart-reloadable-services`                 = project
