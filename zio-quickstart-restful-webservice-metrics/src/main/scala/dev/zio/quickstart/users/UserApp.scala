@@ -2,7 +2,6 @@ package dev.zio.quickstart.users
 
 import zio._
 import zio.http._
-import zio.http.model._
 import zio.json._
 import dev.zio.quickstart._
 
@@ -15,7 +14,7 @@ object UserApp {
   def apply(): Http[UserRepo, Throwable, Request, Response] =
     Http.collectZIO[Request] {
       // POST /users -d '{"name": "John", "age": 35}'
-      case req @ (Method.POST -> !! / "users") =>
+      case req @ (Method.POST -> Root / "users") =>
         (for {
           u <- req.body.asString.map(_.fromJson[User])
           r <- u match {
@@ -23,7 +22,7 @@ object UserApp {
               ZIO
                 .debug(s"Failed to parse the input: $e")
                 .as(
-                  Response.text(e).setStatus(Status.BadRequest)
+                  Response.text(e).withStatus(Status.BadRequest)
                 )
             case Right(u) =>
               UserRepo
@@ -33,7 +32,7 @@ object UserApp {
         } yield r) @@ countAllRequests("post", "/users")
 
       // GET /users/:id
-      case Method.GET -> !! / "users" / id =>
+      case Method.GET -> Root / "users" / id =>
         UserRepo
           .lookup(id)
           .map {
@@ -44,7 +43,7 @@ object UserApp {
           } @@ countAllRequests("get", "/users/:id")
 
       // GET /users
-      case Method.GET -> !! / "users" =>
+      case Method.GET -> Root / "users" =>
         UserRepo.users
           .map(response => Response.json(response.toJson)) @@
           countAllRequests("get", "/users")

@@ -2,7 +2,6 @@ package dev.zio.quickstart.download
 
 import zio._
 import zio.http._
-import zio.http.model._
 import zio.stream.ZStream
 
 /** An http app that:
@@ -14,27 +13,27 @@ object DownloadApp {
   def apply() =
     Http.collect[Request] {
       // GET /download
-      case Method.GET -> !! / "download" =>
+      case Method.GET -> Root / "download" =>
         val fileName = "file.txt"
         http.Response(
           status = Status.Ok,
-          headers = Headers
-            .contentType("application/octet-stream") ++
-            Headers.contentDisposition(s"attachment; filename=${fileName}"),
-          body = Body.fromStream(
-            ZStream.fromResource(fileName)
-          )
+          headers = Headers(
+            Header.ContentType(MediaType.application.`octet-stream`),
+            Header.ContentDisposition.attachment(fileName)
+          ),
+          body = Body.fromStream(ZStream.fromResource(fileName))
         )
 
       // Download a large file using streams
       // GET /download/stream
-      case Method.GET -> !! / "download" / "stream" =>
+      case Method.GET -> Root / "download" / "stream" =>
         val file = "bigfile.txt"
-
         http.Response(
           status = Status.Ok,
-          headers = Headers.contentType("application/octet-stream") ++
-            Headers.contentDisposition(s"attachment; filename=${file}"),
+          headers = Headers(
+            Header.ContentType(MediaType.application.`octet-stream`),
+            Header.ContentDisposition.attachment(file)
+          ),
           body = Body.fromStream(
             ZStream
               .fromResource(file)
