@@ -7,7 +7,7 @@ case class InmemoryUserRepo(map: Ref[Map[String, User]]) extends UserRepo:
   def register(user: User): UIO[String] =
     for
       id <- Random.nextUUID.map(_.toString)
-      _  <- map.updateAndGet(_ + (id -> user))
+      _  <- map.update(_ + (id -> user))
     yield id
 
   def lookup(id: String): UIO[Option[User]] =
