@@ -10,8 +10,6 @@ import zio.config.typesafe.TypesafeConfigProvider
 import zio.http._
 import zio.http.netty.NettyConfig
 
-import java.net.{InetAddress, InetSocketAddress}
-
 object MainApp extends ZIOAppDefault {
   override val bootstrap: ZLayer[ZIOAppArgs, Any, Any] =
     Runtime.setConfigProvider(
