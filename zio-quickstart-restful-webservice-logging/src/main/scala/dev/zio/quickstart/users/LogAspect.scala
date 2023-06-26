@@ -1,7 +1,8 @@
 package dev.zio.quickstart.users
 
-import zhttp.http.Request
-import zio.{Random, UIO, ZIO, ZIOAspect, Trace}
+import zio.{Random, Trace, UIO, ZIO, ZIOAspect}
+import zio.prelude.data.Optional.AllValuesAreNullable
+import zio.http._
 
 object LogAspect {
 
@@ -28,7 +29,8 @@ object LogAspect {
 
       def correlationId(req: Request): UIO[String] =
         ZIO
-          .succeed(req.header("X-Correlation-ID").map(_._2.toString))
+          .succeed(req.headers.get("X-Correlation-ID"))
+          .map(_.toString)
           .flatMap(x => Random.nextUUID.map(uuid => x.getOrElse(uuid.toString)))
     }
 }

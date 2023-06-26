@@ -1,7 +1,7 @@
 package dev.zio.quickstart.users
 
-import zhttp.http._
 import zio._
+import zio.http._
 import zio.json._
 
 /** An http app that:
@@ -15,17 +15,17 @@ object UserApp {
   def apply(): Http[UserRepo, Throwable, Request, Response] =
     Http.collectZIO[Request] {
       // POST /users -d '{"name": "John", "age": 35}'
-      case req @ (Method.POST -> !! / "users") =>
+      case req @ (Method.POST -> Root / "users") =>
         {
           for {
-            body <- req.bodyAsString
+            body <- req.body.asString
             _    <- ZIO.logInfo(s"POST /users -d $body")
             u = body.fromJson[User]
             r <- u match {
               case Left(e) =>
                 ZIO
                   .logErrorCause(s"Failed to parse the input", Cause.fail(e))
-                  .as(Response.text(e).setStatus(Status.BadRequest))
+                  .as(Response.text(e).withStatus(Status.BadRequest))
               case Right(u) =>
                 UserRepo
                   .register(u)
@@ -47,7 +47,7 @@ object UserApp {
         } @@ logSpan("register-user") @@ logAnnotateCorrelationId(req)
 
       // GET /users/:id
-      case req @ (Method.GET -> !! / "users" / id) =>
+      case req @ (Method.GET -> Root / "users" / id) =>
         {
           for {
             _ <- ZIO.logInfo(s"Request: GET /users/$id")
@@ -77,7 +77,7 @@ object UserApp {
         } @@ logSpan("get-user") @@ logAnnotateCorrelationId(req)
 
       // GET /users
-      case req @ (Method.GET -> !! / "users") =>
+      case req @ (Method.GET -> Root / "users") =>
         {
           for {
             _ <- ZIO.logInfo(s"Request: GET /users")
@@ -96,5 +96,4 @@ object UserApp {
           } yield users
         } @@ logSpan("get-users") @@ logAnnotateCorrelationId(req)
     }
-
 }

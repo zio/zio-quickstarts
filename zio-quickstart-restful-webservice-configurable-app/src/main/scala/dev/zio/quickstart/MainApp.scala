@@ -8,8 +8,7 @@ import dev.zio.quickstart.users.{InmemoryUserRepo, UserApp, UserRepo}
 import zio._
 import zio.config.typesafe.TypesafeConfigProvider
 import zio.http._
-
-import java.net.InetSocketAddress
+import zio.http.netty.NettyConfig
 
 object MainApp extends ZIOAppDefault {
   override val bootstrap: ZLayer[ZIOAppArgs, Any, Any] =
@@ -18,28 +17,32 @@ object MainApp extends ZIOAppDefault {
         .fromResourcePath()
     )
 
-  val myApp: Http[UserRepo with Ref[Int], Nothing, Request, Response] =
-    GreetingApp() ++ DownloadApp() ++ CounterApp() ++ UserApp()
-
-  val serverConfig: ZLayer[Any, Config.Error, ServerConfig] =
+  private val serverConfig: ZLayer[Any, Config.Error, Server.Config] =
     ZLayer
       .fromZIO(
         ZIO.config[HttpServerConfig](HttpServerConfig.config).map { c =>
-          ServerConfig(
-            address = new InetSocketAddress(c.port),
-            nThreads = c.nThreads
-          )
+          Server.Config.default.binding(c.host, c.port)
         }
       )
 
-  def run =
+  private val nettyConfig: ZLayer[Any, Config.Error, NettyConfig] =
+    ZLayer
+      .fromZIO(
+        ZIO.config[HttpServerConfig](HttpServerConfig.config).map { c =>
+          NettyConfig.default.maxThreads(c.nThreads)
+        }
+      )
+
+  def run = {
+    val httpApp = GreetingApp() ++ DownloadApp() ++ CounterApp() ++ UserApp()
     (Server
-      .install(myApp)
+      .serve(httpApp.withDefaultErrorResponse)
       .flatMap(port =>
         Console.printLine(s"Started server on port: $port")
       ) *> ZIO.never)
       .provide(
         serverConfig,
+        nettyConfig,
         Server.live,
 
         // A layer responsible for storing the state of the `counterApp`
@@ -48,4 +51,5 @@ object MainApp extends ZIOAppDefault {
         // To use the persistence layer, provide the `PersistentUserRepo.layer` layer instead
         InmemoryUserRepo.layer
       )
+  }
 }

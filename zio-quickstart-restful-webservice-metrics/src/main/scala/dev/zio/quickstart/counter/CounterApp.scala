@@ -1,7 +1,6 @@
 package dev.zio.quickstart.counter
 
 import zio.http._
-import zio.http.model._
 import zio.{Ref, ZIO}
 
 /** An http app that:
@@ -11,20 +10,24 @@ import zio.{Ref, ZIO}
   */
 object CounterApp {
   def apply(): Http[Ref[Int], Nothing, Request, Response] =
-    Http.fromZIO(ZIO.service[Ref[Int]]).flatMap { ref =>
-      Http.collectZIO[Request] {
-        case Method.GET -> !! / "up" =>
+    Http.collectZIO[Request] {
+      case Method.GET -> Root / "up" =>
+        ZIO.serviceWithZIO[Ref[Int]] { ref =>
           ref
             .updateAndGet(_ + 1)
             .map(_.toString)
             .map(Response.text)
-        case Method.GET -> !! / "down" =>
+        }
+      case Method.GET -> Root / "down" =>
+        ZIO.serviceWithZIO[Ref[Int]] { ref =>
           ref
             .updateAndGet(_ - 1)
             .map(_.toString)
             .map(Response.text)
-        case Method.GET -> !! / "get" =>
+        }
+      case Method.GET -> Root / "get" =>
+        ZIO.serviceWithZIO[Ref[Int]](ref =>
           ref.get.map(_.toString).map(Response.text)
-      }
+        )
     }
 }
