@@ -9,5 +9,5 @@ libraryDependencies ++= Seq(
   "com.h2database" % "h2"                % "2.1.214",
   "dev.zio"       %% "zio-logging"       % "2.1.13",
   "dev.zio"       %% "zio-logging-slf4j" % "2.1.13",
-  "org.slf4j"      % "slf4j-simple"      % "2.0.5"
+  "org.slf4j"      % "slf4j-simple"      % "2.0.7"
 )
