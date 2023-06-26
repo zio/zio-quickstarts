@@ -5,8 +5,8 @@ import dev.zio.quickstart.download.DownloadApp
 import dev.zio.quickstart.greet.GreetingApp
 import dev.zio.quickstart.prometheus.PrometheusPublisherApp
 import dev.zio.quickstart.users.{InmemoryUserRepo, UserApp}
-import zhttp.service.Server
 import zio._
+import zio.http._
 import zio.metrics.connectors.{MetricsConfig, prometheus}
 
 object MainApp extends ZIOAppDefault {
@@ -14,9 +14,7 @@ object MainApp extends ZIOAppDefault {
 
   def run =
     Server
-      .start(
-        port = 8080,
-        http =
+      .serve(
           GreetingApp() ++ DownloadApp() ++ CounterApp() ++ UserApp() ++ PrometheusPublisherApp()
       )
       .provide(
@@ -31,6 +29,12 @@ object MainApp extends ZIOAppDefault {
 
         // The prometheus reporting layer
         prometheus.publisherLayer,
-        prometheus.prometheusLayer
+        prometheus.prometheusLayer,
+        
+        // Http Server layer
+        Server.live,
+        
+        // Http Server Config layer
+        ServerConfig.live(ServerConfig().port(8080))
       )
 }

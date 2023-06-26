@@ -1,7 +1,8 @@
 package dev.zio.quickstart.prometheus
 
-import zhttp.http._
 import zio._
+import zio.http._
+import zio.http.model._
 import zio.metrics.connectors.prometheus.PrometheusPublisher
 
 object PrometheusPublisherApp {
