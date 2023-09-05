@@ -1,4 +1,4 @@
-scalaVersion := "3.3.0"
+scalaVersion := "3.3.1"
 
 libraryDependencies ++= Seq(
   "dev.zio"       %% "zio"            % "2.0.16",
