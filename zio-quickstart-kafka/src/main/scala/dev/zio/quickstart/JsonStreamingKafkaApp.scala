@@ -68,8 +68,7 @@ object JsonStreamingKafkaApp extends ZIOAppDefault {
 
     val c: ZStream[Consumer, Throwable, Nothing] =
       Consumer
-        .subscribeAnd(Subscription.topics(KAFKA_TOPIC))
-        .plainStream(KafkaSerde.key, KafkaSerde.value)
+        .plainStream(Subscription.topics(KAFKA_TOPIC), KafkaSerde.key, KafkaSerde.value)
         .tap(e => Console.printLine(e.value))
         .map(_.offset)
         .aggregateAsync(Consumer.offsetBatches)

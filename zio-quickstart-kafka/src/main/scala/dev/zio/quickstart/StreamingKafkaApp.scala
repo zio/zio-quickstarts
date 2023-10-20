@@ -37,8 +37,7 @@ object StreamingKafkaApp extends ZIOAppDefault {
         
     val c: ZStream[Consumer, Throwable, Nothing] =
       Consumer
-        .subscribeAnd(Subscription.topics(KAFKA_TOPIC))
-        .plainStream(Serde.int, Serde.string)
+        .plainStream(Subscription.topics(KAFKA_TOPIC), Serde.int, Serde.string)
         .tap(e => Console.printLine(e.value))
         .map(_.offset)
         .aggregateAsync(Consumer.offsetBatches)

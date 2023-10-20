@@ -36,7 +36,7 @@ object SimpleKafkaApp extends ZIOAppDefault {
       subscription = Subscription.topics(topic),
       keyDeserializer = Serde.long,
       valueDeserializer = Serde.string
-    )((k, v) => Console.printLine((k, v)).orDie)
+    )(record => Console.printLine((record.key(), record.value())).orDie)
 
   private val producer: ZLayer[Any, Throwable, Producer] =
     ZLayer.scoped(
