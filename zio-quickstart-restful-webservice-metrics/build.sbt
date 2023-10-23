@@ -11,3 +11,4 @@ libraryDependencies ++= Seq(
   "io.getquill"   %% "quill-jdbc-zio"         % "4.7.0",
   "com.h2database" % "h2"                     % "2.2.224"
 )
+scalacOptions ++= Seq("-unchecked", "-deprecation")
