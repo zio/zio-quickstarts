@@ -7,17 +7,17 @@ import zio.kafka.producer.{Producer, ProducerSettings}
 import zio.kafka.serde._
 
 /** A simple app that produces and consumes messages from a kafka cluster
-  * without using ZIO Streams.
-  */
+ * without using ZIO Streams.
+ */
 object SimpleKafkaApp extends ZIOAppDefault {
   private val BOOSTRAP_SERVERS = List("localhost:29092")
   private val KAFKA_TOPIC = "hello"
 
   private def produce(
-      topic: String,
-      key: Long,
-      value: String
-  ): RIO[Any with Producer, RecordMetadata] =
+                       topic: String,
+                       key: Long,
+                       value: String
+                     ): RIO[Any with Producer, RecordMetadata] =
     Producer.produce[Any, Long, String](
       topic = topic,
       key = key,
@@ -27,9 +27,9 @@ object SimpleKafkaApp extends ZIOAppDefault {
     )
 
   private def consumeAndPrintEvents(
-      groupId: String,
-      topic: String
-  ): RIO[Any, Unit] =
+                                     groupId: String,
+                                     topic: String
+                                   ): RIO[Any, Unit] =
     Consumer.consumeWith(
       settings = ConsumerSettings(BOOSTRAP_SERVERS)
         .withGroupId(groupId),
