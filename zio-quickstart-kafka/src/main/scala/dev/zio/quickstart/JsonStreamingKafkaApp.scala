@@ -27,7 +27,8 @@ object KafkaSerde {
 
   val value: Serde[Any, Event] =
     Serde.string.inmapM[Any, Event](s =>
-      ZIO.fromEither(s.fromJson[Event])
+      ZIO
+        .fromEither(s.fromJson[Event])
         .mapError(e => new RuntimeException(e))
     )(r => ZIO.succeed(r.toJson))
 }
@@ -68,7 +69,11 @@ object JsonStreamingKafkaApp extends ZIOAppDefault {
 
     val c: ZStream[Consumer, Throwable, Nothing] =
       Consumer
-        .plainStream(Subscription.topics(KAFKA_TOPIC), KafkaSerde.key, KafkaSerde.value)
+        .plainStream(
+          Subscription.topics(KAFKA_TOPIC),
+          KafkaSerde.key,
+          KafkaSerde.value
+        )
         .tap(e => Console.printLine(e.value))
         .map(_.offset)
         .aggregateAsync(Consumer.offsetBatches)

@@ -31,10 +31,16 @@ object StreamingKafkaApp extends ZIOAppDefault {
       ZStream
         .repeatZIO(Clock.currentDateTime)
         .schedule(Schedule.spaced(1.second))
-        .map(time => new ProducerRecord(KAFKA_TOPIC, time.getMinute, s"$time -- Hello, World!"))
+        .map(time =>
+          new ProducerRecord(
+            KAFKA_TOPIC,
+            time.getMinute,
+            s"$time -- Hello, World!"
+          )
+        )
         .via(Producer.produceAll(Serde.int, Serde.string))
         .drain
-        
+
     val c: ZStream[Consumer, Throwable, Nothing] =
       Consumer
         .plainStream(Subscription.topics(KAFKA_TOPIC), Serde.int, Serde.string)
@@ -43,7 +49,7 @@ object StreamingKafkaApp extends ZIOAppDefault {
         .aggregateAsync(Consumer.offsetBatches)
         .mapZIO(_.commit)
         .drain
-    
+
     (p merge c).runDrain.provide(producer, consumer)
   }
 
