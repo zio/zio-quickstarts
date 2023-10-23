@@ -51,6 +51,6 @@ case class PersistentUserRepo(ds: DataSource) extends UserRepo {
 
 object PersistentUserRepo {
   def layer: ZLayer[Any, Throwable, PersistentUserRepo] =
-   Quill.DataSource.fromPrefix("UserApp") >>>
+    Quill.DataSource.fromPrefix("UserApp") >>>
       ZLayer.fromFunction(PersistentUserRepo(_))
 }
