@@ -4,7 +4,7 @@ name         := "zio-quickstart-restful-webservice"
 
 libraryDependencies ++= Seq(
   "dev.zio"       %% "zio"                    % "2.0.19",
-  "dev.zio"       %% "zio-metrics-connectors" % "2.0.8",
+  "dev.zio"       %% "zio-metrics-connectors" % "2.2.1",
   "dev.zio"       %% "zio-json"               % "0.6.2",
   "dev.zio"       %% "zio-http"               % "3.0.0-RC2",
   "io.getquill"   %% "quill-zio"              % "4.7.0",
