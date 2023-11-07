@@ -1,4 +1,4 @@
-scalaVersion := "2.13.8"
+scalaVersion := "2.13.12"
 Test / fork  := true
 
 libraryDependencies += "dev.zio" %% "zio"      % "2.0.19" % "test"
