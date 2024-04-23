@@ -1,10 +1,6 @@
-val `zio-quickstart-kafka` =
-  project.settings(
-    stdSettings(),
-    enableZIO(enableStreaming = true)
-  )
+scalaVersion := "2.13.13"
 
 libraryDependencies ++= Seq(
-  "dev.zio" %% "zio-kafka" % "2.6.0",
+  "dev.zio" %% "zio-kafka" % "2.7.4",
   "dev.zio" %% "zio-json"  % "0.6.2"
 )
