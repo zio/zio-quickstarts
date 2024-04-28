@@ -1,10 +1,10 @@
 package dev.zio.quickstart
 
 import dev.zio.quickstart.config.HttpServerConfig
-import dev.zio.quickstart.counter.CounterApp
-import dev.zio.quickstart.download.DownloadApp
-import dev.zio.quickstart.greet.GreetingApp
-import dev.zio.quickstart.users.{InmemoryUserRepo, UserApp, UserRepo}
+import dev.zio.quickstart.counter.CounterRoutes
+import dev.zio.quickstart.download.DownloadRoutes
+import dev.zio.quickstart.greet.GreetingRoutes
+import dev.zio.quickstart.users.{InmemoryUserRepo, UserRoutes}
 import zio._
 import zio.config.typesafe.TypesafeConfigProvider
 import zio.http._
@@ -34,9 +34,8 @@ object MainApp extends ZIOAppDefault {
       )
 
   def run = {
-    val httpApp = GreetingApp() ++ DownloadApp() ++ CounterApp() ++ UserApp()
     (Server
-      .serve(httpApp.withDefaultErrorResponse)
+      .install(GreetingRoutes() ++ DownloadRoutes() ++ CounterRoutes() ++ UserRoutes())
       .flatMap(port =>
         Console.printLine(s"Started server on port: $port")
       ) *> ZIO.never)
