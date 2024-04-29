@@ -2,7 +2,7 @@ package dev.zio.quickstart.users
 
 import zio.*
 import zio.http.*
-import zio.schema.codec.JsonCodec.schemaBasedBinaryCodec 
+import zio.schema.codec.JsonCodec.schemaBasedBinaryCodec
 
 /** Collection of routes that:
   *   - Accept a `Request` and returns a `Response`
@@ -47,7 +47,7 @@ object UserRoutes:
       Method.GET / "users" -> handler {
         UserRepo.users.mapBoth(
           _ => Response.internalServerError("Cannot retrieve users!"),
-          users => Response(body =Body.from(users))
+          users => Response(body = Body.from(users))
         )
       }
     )

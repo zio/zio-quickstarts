@@ -4,12 +4,11 @@ import zio._
 import zio.http._
 import zio.schema.codec.JsonCodec.schemaBasedBinaryCodec
 
-
 /** Collection of routes that:
- *   - Accept a `Request` and returns a `Response`
- *   - May fail with type of `Response`
- *   - Require a `UserRepo` from the environment
- */
+  *   - Accept a `Request` and returns a `Response`
+  *   - May fail with type of `Response`
+  *   - Require a `UserRepo` from the environment
+  */
 object UserRoutes {
 
   def apply(): Routes[UserRepo, Response] =
@@ -38,7 +37,7 @@ object UserRoutes {
                 id => ZIO.succeed(Response.text(id))
               )
         } yield r
-      }, 
+      },
 
       // GET /users/:id
       Method.GET / "users" / string("id") -> handler {
@@ -78,7 +77,7 @@ object UserRoutes {
               )
               .as(Response(body = Body.from(users)))
         )
-      },
-    ) @@ Middleware.metrics() 
+      }
+    ) @@ Middleware.metrics()
 
 }

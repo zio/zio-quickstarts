@@ -3,14 +3,20 @@ package dev.zio.quickstart
 import dev.zio.quickstart.counter.CounterRoutes
 import dev.zio.quickstart.download.DownloadRoutes
 import dev.zio.quickstart.greet.GreetingRoutes
-import dev.zio.quickstart.users.{InmemoryUserRepo, PersistentUserRepo, UserRoutes}
+import dev.zio.quickstart.users.{
+  InmemoryUserRepo,
+  PersistentUserRepo,
+  UserRoutes
+}
 import zio._
 import zio.http._
 
 object MainApp extends ZIOAppDefault:
   def run =
     Server
-      .serve(GreetingRoutes() ++ DownloadRoutes() ++ CounterRoutes() ++ UserRoutes())
+      .serve(
+        GreetingRoutes() ++ DownloadRoutes() ++ CounterRoutes() ++ UserRoutes()
+      )
       .provide(
         Server.defaultWithPort(8080),
 

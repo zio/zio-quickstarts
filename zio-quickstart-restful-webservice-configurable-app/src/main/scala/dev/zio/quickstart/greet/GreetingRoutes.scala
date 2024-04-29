@@ -3,10 +3,10 @@ package dev.zio.quickstart.greet
 import zio.http._
 
 /** Collection of routes that:
- *   - Accept a `Request` and return a `Response`
- *   - Do not fail
- *   - Do not use the environment
- */
+  *   - Accept a `Request` and return a `Response`
+  *   - Do not fail
+  *   - Do not use the environment
+  */
 object GreetingRoutes {
   def apply(): Routes[Any, Nothing] =
     Routes(
@@ -23,8 +23,9 @@ object GreetingRoutes {
       Method.GET / "greet" -> handler(Response.text(s"Hello World!")),
 
       // GET /greet/:name
-      Method.GET / "greet" / string("name") -> handler { (name: String, _: Request) =>
-        Response.text(s"Hello $name!")
+      Method.GET / "greet" / string("name") -> handler {
+        (name: String, _: Request) =>
+          Response.text(s"Hello $name!")
       }
     )
 }

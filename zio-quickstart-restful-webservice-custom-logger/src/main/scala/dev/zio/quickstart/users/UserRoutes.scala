@@ -11,7 +11,7 @@ import zio.schema.codec.JsonCodec.schemaBasedBinaryCodec
   */
 object UserRoutes {
   import LogAspect._
-  
+
   def apply(): Routes[UserRepo, Response] =
     Routes(
       // POST /users -d '{"name": "John", "age": 35}'
@@ -63,7 +63,7 @@ object UserRoutes {
                       ZIO.fail(Response.notFound(s"User $id not found!"))
                 }
               )
-      }  @@ logSpan("get-user"),
+      } @@ logSpan("get-user"),
       // GET /users
       Method.GET / "users" -> handler {
         UserRepo.users.foldZIO(
@@ -78,7 +78,7 @@ object UserRoutes {
               )
               .as(Response(body = Body.from(users)))
         )
-      }  @@ logSpan("get-users")
+      } @@ logSpan("get-users")
     ) @@ logAnnotateCorrelationId
 
 }

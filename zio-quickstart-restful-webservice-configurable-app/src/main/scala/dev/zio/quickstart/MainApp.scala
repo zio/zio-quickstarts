@@ -35,7 +35,9 @@ object MainApp extends ZIOAppDefault {
 
   def run = {
     (Server
-      .install(GreetingRoutes() ++ DownloadRoutes() ++ CounterRoutes() ++ UserRoutes())
+      .install(
+        GreetingRoutes() ++ DownloadRoutes() ++ CounterRoutes() ++ UserRoutes()
+      )
       .flatMap(port =>
         Console.printLine(s"Started server on port: $port")
       ) *> ZIO.never)

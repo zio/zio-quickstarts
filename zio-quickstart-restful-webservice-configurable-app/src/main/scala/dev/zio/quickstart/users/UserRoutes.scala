@@ -2,7 +2,7 @@ package dev.zio.quickstart.users
 
 import zio._
 import zio.http._
-import zio.schema.codec.JsonCodec.schemaBasedBinaryCodec 
+import zio.schema.codec.JsonCodec.schemaBasedBinaryCodec
 
 /** Collection of routes that:
   *   - Accept a `Request` and returns a `Response`
