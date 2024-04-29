@@ -1,5 +1,4 @@
 scalaVersion := "3.3.1"
-resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
 libraryDependencies ++= Seq(
   "dev.zio"       %% "zio"            % "2.0.22",
@@ -9,3 +8,5 @@ libraryDependencies ++= Seq(
   "io.getquill"   %% "quill-jdbc-zio" % "4.7.0",
   "com.h2database" % "h2"             % "2.2.224"
 )
+
+resolvers ++= Resolver.sonatypeOssRepos("snapshots")

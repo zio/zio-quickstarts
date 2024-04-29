@@ -12,4 +12,4 @@ libraryDependencies ++= Seq(
   "dev.zio"       %% "zio-config-magnolia" % "4.0.0-RC16"
 )
 
-resolvers += Resolver.sonatypeOssRepos("snapshots")
+resolvers ++= Resolver.sonatypeOssRepos("snapshots")
