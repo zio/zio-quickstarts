@@ -32,7 +32,9 @@ lazy val root =
       `zio-quickstart-kafka`,
       `zio-quickstart-graphql-webservice`,
       `zio-quickstart-streams`,
-      `zio-quickstart-encode-decode-json`
+      `zio-quickstart-encode-decode-json`,
+      `zio-quickstart-cache`,
+      `zio-quickstart-prelude`
     )
 
 lazy val `zio-quickstart-hello-world`                         = project
@@ -48,3 +50,5 @@ lazy val `zio-quickstart-graphql-webservice`                  = project
 lazy val `zio-quickstart-streams`                             = project
 lazy val `zio-quickstart-encode-decode-json`                  = project
 lazy val `zio-quickstart-reloadable-services`                 = project
+lazy val `zio-quickstart-cache`                               = project
+lazy val `zio-quickstart-prelude`                             = project

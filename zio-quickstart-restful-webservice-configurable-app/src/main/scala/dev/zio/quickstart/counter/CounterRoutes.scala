@@ -1,33 +1,36 @@
 package dev.zio.quickstart.counter
 
 import zio.http._
-import zio.{Ref, ZIO}
+import zio._
 
-/** An http app that:
-  *   - Accepts `Request` and returns a `Response`
-  *   - Does not fail
-  *   - Requires the `Ref[Int]` as the environment
+/** Collection of routes that:
+  *   - Accept `Request` and returns a `Response`
+  *   - Do not fail
+  *   - Require the `Ref[Int]` as the environment
   */
-object CounterApp {
-  def apply(): Http[Ref[Int], Nothing, Request, Response] =
-    Http.collectZIO[Request] {
-      case Method.GET -> Root / "up" =>
+object CounterRoutes {
+  def apply(): Routes[Ref[Int], Nothing] =
+    Routes(
+      Method.GET / "up" -> handler {
         ZIO.serviceWithZIO[Ref[Int]] { ref =>
           ref
             .updateAndGet(_ + 1)
             .map(_.toString)
             .map(Response.text)
         }
-      case Method.GET -> Root / "down" =>
+      },
+      Method.GET / "down" -> handler {
         ZIO.serviceWithZIO[Ref[Int]] { ref =>
           ref
             .updateAndGet(_ - 1)
             .map(_.toString)
             .map(Response.text)
         }
-      case Method.GET -> Root / "get" =>
+      },
+      Method.GET / "get" -> handler {
         ZIO.serviceWithZIO[Ref[Int]](ref =>
           ref.get.map(_.toString).map(Response.text)
         )
-    }
+      }
+    )
 }
