@@ -1,4 +1,6 @@
 package dev.zio.quickstart.greet
+
+import zio._
 import zio.http._
 
 object GreetingRoutes {
@@ -7,10 +9,13 @@ object GreetingRoutes {
       // GET /greet?name=:name
       Method.GET / "greet" -> handler { (req: Request) =>
         if (req.url.queryParams.nonEmpty)
-          Response.text(
-            s"Hello ${req.url.queryParams("name").map(_.mkString(" and "))}!"
+          ZIO.succeed(
+            Response.text(
+              s"Hello ${req.url.queryParams("name").map(_.mkString(" and "))}!"
+            )
           )
-        else Response.badRequest("The name query parameter is missing!")
+        else
+          ZIO.fail(Response.badRequest("The name query parameter is missing!"))
       },
 
       // GET /greet
