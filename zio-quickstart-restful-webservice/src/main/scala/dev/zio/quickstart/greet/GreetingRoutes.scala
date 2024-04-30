@@ -8,15 +8,18 @@ import zio.http.*
   *   - Do not use the environment
   */
 object GreetingRoutes:
-  def apply(): Routes[Any, Nothing] =
+  def apply(): Routes[Any, Response] =
     Routes(
       // GET /greet?name=:name
       Method.GET / "greet" -> handler { (req: Request) =>
         if (req.url.queryParams.nonEmpty)
-          Response.text(
-            s"Hello ${req.url.queryParams("name").map(_.mkString(" and "))}!"
+          ZIO.succeed(
+            Response.text(
+              s"Hello ${req.url.queryParams("name").map(_.mkString(" and "))}!"
+            )
           )
-        else Response.badRequest("The name query parameter is missing!")
+        else
+          ZIO.fail(Response.badRequest("The name query parameter is missing!"))
       },
 
       // GET /greet
