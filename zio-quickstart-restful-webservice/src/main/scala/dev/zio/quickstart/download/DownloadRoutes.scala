@@ -3,17 +3,17 @@ package dev.zio.quickstart.download
 import zio._
 import zio.http._
 import zio.stream.ZStream
+import zio.schema.codec.JsonCodec.zioJsonBinaryCodec
 
-/** An http app that:
-  *   - Accepts a `Request` and returns a `Response`
-  *   - May fail with type of `Throwable`
-  *   - Does not require any environment
+/** Collection of routes that:
+  *   - Accept a `Request` and returns a `Response`
+  *   - Do not require any environment
   */
-object DownloadApp {
-  def apply() =
-    Http.collect[Request] {
+object DownloadRoutes:
+  def apply(): Routes[Any, Nothing] =
+    Routes(
       // GET /download
-      case Method.GET -> Root / "download" =>
+      Method.GET / Root / "download" -> handler {
         val fileName = "file.txt"
         http.Response(
           status = Status.Ok,
@@ -23,10 +23,11 @@ object DownloadApp {
           ),
           body = Body.fromStream(ZStream.fromResource(fileName))
         )
+      },
 
       // Download a large file using streams
       // GET /download/stream
-      case Method.GET -> Root / "download" / "stream" =>
+      Method.GET / "download" / "stream" -> handler {
         val file = "bigfile.txt"
         http.Response(
           status = Status.Ok,
@@ -40,5 +41,5 @@ object DownloadApp {
               .schedule(Schedule.spaced(50.millis))
           )
         )
-    }
-}
+      }
+    )

@@ -1,17 +1,18 @@
 package dev.zio.quickstart
 
-import dev.zio.quickstart.counter.CounterApp
-import dev.zio.quickstart.download.DownloadApp
-import dev.zio.quickstart.greet.GreetingApp
-import dev.zio.quickstart.users.{InmemoryUserRepo, PersistentUserRepo, UserApp}
+import dev.zio.quickstart.counter.CounterRoutes
+import dev.zio.quickstart.download.DownloadRoutes
+import dev.zio.quickstart.greet.GreetingRoutes
+import dev.zio.quickstart.users.{InmemoryUserRepo, UserRoutes}
 import zio._
 import zio.http._
 
 object MainApp extends ZIOAppDefault {
   def run = {
-    val httpApps = GreetingApp() ++ DownloadApp() ++ CounterApp() ++ UserApp()
     Server
-      .serve(httpApps.withDefaultErrorResponse)
+      .serve(
+        GreetingRoutes() ++ DownloadRoutes() ++ CounterRoutes() ++ UserRoutes()
+      )
       .provide(
         Server.defaultWithPort(8080),
 
