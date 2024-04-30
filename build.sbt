@@ -8,7 +8,7 @@ inThisBuild(
     ciReleaseJobs              := Seq.empty,
     ciPostReleaseJobs          := Seq.empty,
     ciCheckWebsiteBuildProcess := Seq.empty,
-    scalaVersion               := "2.13.8",
+    scalaVersion               := "2.13.12",
     ciTargetScalaVersions := makeTargetScalaMap(
       `zio-quickstart-encode-decode-json`
     ).value,
