@@ -16,13 +16,13 @@ We have a dedicated article about this quickstart at the ZIO documentation websi
 
 First, open the console and clone the project using `git` (or you can simply download the project) and then change the directory:
 
-```scala
-git clone git@github.com:zio/zio-quickstart-restful-webservice.git 
-cd zio-quickstart-restful-webservice
+```bash
+$ git clone https://github.com/zio/zio-quickstarts.git
+$ cd zio-quickstarts/zio-quickstart-restful-webservice
 ```
 
 Once you are inside the project directory, run the application:
 
-```scala
-sbt run
+```bash
+$ sbt run
 ```
