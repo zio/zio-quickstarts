@@ -35,6 +35,8 @@ jobs:
       uses: coursier/cache-action@v6
     - name: Check all code compiles
       run: sbt +Test/compile
+    - name: Check all tests
+      run: sbt test
     - name: Check artifacts build process
       run: sbt +publishLocal
   lint:
