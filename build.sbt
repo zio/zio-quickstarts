@@ -38,6 +38,9 @@ lazy val root =
       `zio-quickstart-stm`,
       `zio-quickstart-sql`
     )
+    .settings(
+      testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
+    )
 
 lazy val `zio-quickstart-hello-world`                         = project
 lazy val `zio-quickstart-junit-integration`                   = project

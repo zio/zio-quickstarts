@@ -1,4 +1,5 @@
 scalaVersion := "2.13.13"
+Test / fork  := true
 
 libraryDependencies ++= Seq(
   "org.slf4j"          % "slf4j-simple"                    % "2.0.13",

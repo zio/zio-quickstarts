@@ -9,7 +9,7 @@ import zio.schema.DeriveSchema
 import zio.test.Assertion._
 import zio.test._
 
-import java.math.BigDecimal
+import java.math.{BigDecimal, RoundingMode}
 import java.time.{LocalDate, ZonedDateTime}
 import java.util.UUID
 
@@ -58,9 +58,9 @@ object PostgresSqlSpec extends JdbcRunnableSpec {
   }
 
   object OrderSchema {
-    final case class Order(id: UUID, customerId: UUID, orderDate: LocalDate)
-    implicit val orderSchema               = DeriveSchema.gen[Order]
-    val orders                             = defineTable[Order]
+    final case class Orders(id: UUID, customerId: UUID, orderDate: LocalDate)
+    implicit val orderSchema               = DeriveSchema.gen[Orders]
+    val orders                             = defineTable[Orders]
     val (orderId, fkCustomerId, orderDate) = orders.columns
   }
 
@@ -124,7 +124,7 @@ object PostgresSqlSpec extends JdbcRunnableSpec {
 
         for {
           result <- execute(selectQuery)
-            .map(Order tupled _)
+            .map(Orders tupled _)
             .runCollect // return chunk of founded rows
         } yield assert(result)(hasSameElementsDistinct(expected))
       },
@@ -164,6 +164,9 @@ object PostgresSqlSpec extends JdbcRunnableSpec {
 
         for {
           result <- execute(query).runHead
+          roundedResult = result.map { case (totalAmount, soldQuantity) =>
+            (totalAmount.setScale(2, RoundingMode.HALF_EVEN), soldQuantity)
+          }
         } yield assert(result)(isSome(equalTo((new BigDecimal(215.99), 40))))
       },
       test("run custom function") {
@@ -217,33 +220,35 @@ object PostgresSqlSpec extends JdbcRunnableSpec {
         insertAssertion.mapErrorCause(cause => Cause.stackless(cause.untraced))
       },
       test("render query") {
-        import OrderSchema._
+        import OrderDetailsSchema._
         import ProductSchema._
 
-        val selectQuery = select(orderId, name)
-          .from(products.join(orders).on(productId === orderId))
+        val selectQuery = select(quantity, name)
+          .from(
+            products.join(orderDetails).on(orderDetailsProductId === productId)
+          )
           .limit(5)
           .offset(10)
         val selectQueryRender =
-          "SELECT \"order\".\"id\", \"products\".\"name\" FROM \"products\" INNER JOIN \"order\" ON \"order\".\"product_id\" = \"products\".\"id\"  LIMIT 5 OFFSET 10"
+          "SELECT \"order_details\".\"quantity\", \"products\".\"name\" FROM \"products\" INNER JOIN \"order_details\" ON \"order_details\".\"product_id\" = \"products\".\"id\"  LIMIT 5 OFFSET 10"
 
+        val uuid = UUID.randomUUID()
         val insertQuery =
           insertInto(products)(productId, name, description).values(
             (
-              UUID.randomUUID(),
+              uuid,
               "Zionomicon",
               "Good book to start your journey in zio"
             )
           )
         val insertQueryRender =
-          "INSERT INTO \"products\" (\"id\", \"name\", \"description\") VALUES (?, ?, ?);"
+          s"INSERT INTO \"products\" (\"id\", \"name\", \"description\") VALUES ('${uuid.toString}', 'Zionomicon', 'Good book to start your journey in zio');"
 
-        val uuid = UUID.randomUUID()
         val updateQuery = update(products)
           .set(name, "foo")
           .where(productId === uuid)
         val updateQueryRender =
-          s"UPDATE \"products\" SET \"name\" = 'foo', WHERE \"products\".\"id\" = '${uuid.toString}'"
+          s"UPDATE \"products\" SET \"name\" = 'foo' WHERE \"products\".\"id\" = '${uuid.toString}'"
 
         val deleteQuery = deleteFrom(products).where(productId === uuid)
         val deleteQueryRender =
