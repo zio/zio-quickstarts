@@ -10,7 +10,9 @@ inThisBuild(
     ciCheckWebsiteBuildProcess := Seq.empty,
     scalaVersion               := "2.13.8",
     ciTargetScalaVersions := makeTargetScalaMap(
-      `zio-quickstart-encode-decode-json`
+      `zio-quickstart-encode-decode-json`,
+      `zio-quickstart-sql`,
+      `zio-quickstart-prelude`
     ).value,
     ciDefaultTargetJavaVersions := Seq("8"),
     semanticdbEnabled           := true,

@@ -120,7 +120,20 @@ object PostgresSqlSpec extends JdbcRunnableSpec {
           .limit(2)                          // set limit
           .offset(1)                         // set offset
 
-        val expected = Chunk.empty
+        val expected = Chunk(
+          Orders(
+            id = UUID.fromString("5883cb62-d792-4ee3-acbc-fe85b6baa998"),
+            customerId =
+              UUID.fromString("784426a5-b90a-4759-afbb-571b7a0ba35e"),
+            orderDate = LocalDate.of(2020, 4, 30)
+          ),
+          Orders(
+            id = UUID.fromString("763a7c39-833f-4ee8-9939-e80dfdbfc0fc"),
+            customerId =
+              UUID.fromString("f76c9ace-be07-4bf3-bd4c-4a9c62882e64"),
+            orderDate = LocalDate.of(2020, 4, 5)
+          )
+        )
 
         for {
           result <- execute(selectQuery)
@@ -167,7 +180,13 @@ object PostgresSqlSpec extends JdbcRunnableSpec {
           roundedResult = result.map { case (totalAmount, soldQuantity) =>
             (totalAmount.setScale(2, RoundingMode.HALF_EVEN), soldQuantity)
           }
-        } yield assert(result)(isSome(equalTo((new BigDecimal(215.99), 40))))
+        } yield assert(roundedResult)(
+          isSome(
+            equalTo(
+              (new BigDecimal(215.99).setScale(2, RoundingMode.HALF_EVEN), 40)
+            )
+          )
+        )
       },
       test("run custom function") {
         import PostgresFunctionDef._ // to use custom functions
