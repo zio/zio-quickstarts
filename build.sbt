@@ -34,7 +34,8 @@ lazy val root =
       `zio-quickstart-streams`,
       `zio-quickstart-encode-decode-json`,
       `zio-quickstart-cache`,
-      `zio-quickstart-prelude`
+      `zio-quickstart-prelude`,
+      `zio-quickstart-stm`
     )
 
 lazy val `zio-quickstart-hello-world`                         = project
@@ -52,3 +53,4 @@ lazy val `zio-quickstart-encode-decode-json`                  = project
 lazy val `zio-quickstart-reloadable-services`                 = project
 lazy val `zio-quickstart-cache`                               = project
 lazy val `zio-quickstart-prelude`                             = project
+lazy val `zio-quickstart-stm`                                 = project
