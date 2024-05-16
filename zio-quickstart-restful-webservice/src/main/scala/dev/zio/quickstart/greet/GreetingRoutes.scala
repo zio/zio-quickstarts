@@ -16,16 +16,12 @@ object GreetingRoutes:
         if (req.url.queryParams.nonEmpty)
           ZIO.succeed(
             Response.text(
-              s"Hello ${req.url.queryParams("name").map(_.mkString(" and "))}!"
+              s"Hello ${req.url.queryParams("name").reduce((x, y) => x + " and " + y)}!"
             )
           )
         else
-          ZIO.fail(Response.badRequest("The name query parameter is missing!"))
+          ZIO.succeed(Response.text(s"Hello World!"))
       },
-
-      // GET /greet
-      Method.GET / "greet" -> handler(Response.text(s"Hello World!")),
-
       // GET /greet/:name
       Method.GET / "greet" / string("name") -> handler {
         (name: String, _: Request) =>
