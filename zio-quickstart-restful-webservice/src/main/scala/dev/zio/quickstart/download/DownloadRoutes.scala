@@ -21,7 +21,7 @@ object DownloadRoutes:
             Header.ContentType(MediaType.application.`octet-stream`),
             Header.ContentDisposition.attachment(fileName)
           ),
-          body = Body.fromStream(ZStream.fromResource(fileName))
+          body = Body.fromStreamChunked(ZStream.fromResource(fileName))
         )
       },
 
@@ -35,7 +35,7 @@ object DownloadRoutes:
             Header.ContentType(MediaType.application.`octet-stream`),
             Header.ContentDisposition.attachment(file)
           ),
-          body = Body.fromStream(
+          body = Body.fromStreamChunked(
             ZStream
               .fromResource(file)
               .schedule(Schedule.spaced(50.millis))
