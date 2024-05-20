@@ -2,7 +2,6 @@ package dev.zio.quickstart
 
 import zio._
 
-// thanks jorge-vasquez-2301 for this example
 object UseLRUCacheWithMultipleFibers extends ZIOAppDefault {
   lazy val run =
     (for {
