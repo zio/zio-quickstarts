@@ -49,17 +49,17 @@ values ('60b01fc9-c902-4468-8d49-3c0f989def37', 'Ronald', 'Russell', true, '1983
 insert into products
     (id, name, description, image_url)
 values ('7368ABF4-AED2-421F-B426-1725DE756895', 'Thermometer', 'Make sure you don''t have a fever (could be covid!)',
-        'https://images.pexels.com/photos/3987152/pexels-photo-3987152.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'),
+        'Thermometer picture'),
        ('4C770002-4C8F-455A-96FF-36A8186D5290', 'Slippers', 'Keep your feet warm this winter',
-        'https://images.pexels.com/photos/1989843/pexels-photo-1989843.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'),
+        'Slippers picture'),
        ('05182725-F5C8-4FD6-9C43-6671E179BF55', 'Mouse Pad', 'Who uses these anyway?',
-        'https://images.pexels.com/photos/3944396/pexels-photo-3944396.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'),
+        'Mouse Pad picture'),
        ('105A2701-EF93-4E25-81AB-8952CC7D9DAA', 'Pants', 'Avoid a lawsuit, wear pants to work today!',
-        'https://images.pexels.com/photos/52518/jeans-pants-blue-shop-52518.jpeg?cs=srgb&dl=blue-jeans-clothes-shopping-52518.jpg&fm=jpg'),
+        'Pants picture'),
        ('F35B0053-855B-4145-ABE1-DC62BC1FDB96', 'Nail File', 'Keep those nails looking good',
-        'https://images.pexels.com/photos/3997373/pexels-photo-3997373.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'),
+        'Nail File picture'),
        ('D5137D3A-894A-4109-9986-E982541B434F', 'Teddy Bear', 'Because sometimes you just need something to hug',
-        'https://images.pexels.com/photos/1019471/stuffed-bear-teddy-child-girl-1019471.jpeg?cs=srgb&dl=closeup-photography-of-brown-teddy-bear-1019471.jpg&fm=jpg');
+        'Teddy Bear picture');
 
 insert into product_prices
     (product_id, effective, price)
