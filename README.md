@@ -18,3 +18,22 @@ Once you are inside the project directory, run the application:
 ```bash
 $ sbt run
 ```
+
+## List of Quickstarts
+
+- [ZIO Cache](zio-quickstart-cache)
+- [ZIO Json](zio-quickstart-encode-decode-json)
+- [ZIO GraphQL Webservice](zio-quickstart-graphql-webservice)
+- [ZIO Hello World](zio-quickstart-hello-world)
+- [ZIO JUnit Tests](zio-quickstart-junit-integration)
+- [ZIO Kafka](zio-quickstart-kafka)
+- [ZIO Prelude](zio-quickstart-prelude)
+- [ZIO Reloadable Service](zio-quickstart-reloadable-services)
+- [ZIO RESTful webservice](zio-quickstart-restful-webservice)
+- [ZIO RESTful webservice with configs](zio-quickstart-restful-webservice-configurable-app)
+- [ZIO RESTful webservice with default logger](zio-quickstart-restful-webservice-logging)
+- [ZIO RESTful webservice with custom logger](zio-quickstart-restful-webservice-custom-logger)
+- [ZIO RESTful webservice with docker](zio-quickstart-restful-webservice-dockerize)
+- [ZIO RESTful webservice with metrics](zio-quickstart-restful-webservice-metrics)
+- [ZIO STM](zio-quickstart-stm) - many thanks to [@jorge-vasquez-2301](https://github.com/jorge-vasquez-2301) and his [article](https://scalac.io/blog/how-to-write-a-completely-lock-free-concurrent-lru-cache-with-zio-stm/) for this example
+- [ZIO Streams](zio-quickstart-streams)
