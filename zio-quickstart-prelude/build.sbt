@@ -1,4 +1,5 @@
 scalaVersion := "2.13.13"
+Test / fork  := true
 
 libraryDependencies ++= Seq(
   "dev.zio" %% "zio-prelude"    % "1.0.0-RC23",
