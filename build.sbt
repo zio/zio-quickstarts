@@ -12,7 +12,8 @@ inThisBuild(
     ciTargetScalaVersions := makeTargetScalaMap(
       `zio-quickstart-encode-decode-json`,
       `zio-quickstart-sql`,
-      `zio-quickstart-prelude`
+      `zio-quickstart-prelude`,
+      `zio-quickstart-restful-webservice`
     ).value,
     ciDefaultTargetJavaVersions := Seq("8"),
     semanticdbEnabled           := true,

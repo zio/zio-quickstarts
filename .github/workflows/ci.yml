@@ -73,6 +73,7 @@ jobs:
         - ++2.13.8 zio-quickstart-encode-decode-json
         - ++2.13.13 zio-quickstart-sql
         - ++2.13.13 zio-quickstart-prelude
+        - ++3.3.1 zio-quickstart-restful-webservice
     steps:
     - name: Install libuv
       run: sudo apt-get update && sudo apt-get install -y libuv1-dev
