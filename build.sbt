@@ -45,9 +45,10 @@ lazy val root =
       testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
     )
 
-lazy val `zio-quickstart-hello-world`                         = project
-lazy val `zio-quickstart-junit-integration`                   = project
-lazy val `zio-quickstart-restful-webservice`                  = project
+lazy val `zio-quickstart-hello-world`       = project
+lazy val `zio-quickstart-junit-integration` = project
+lazy val `zio-quickstart-restful-webservice` =
+  project.settings(scalaVersion := "3.3.3")
 lazy val `zio-quickstart-restful-webservice-configurable-app` = project
 lazy val `zio-quickstart-restful-webservice-custom-logger`    = project
 lazy val `zio-quickstart-restful-webservice-dockerize`        = project
