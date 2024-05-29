@@ -8,14 +8,14 @@ inThisBuild(
     ciReleaseJobs              := Seq.empty,
     ciPostReleaseJobs          := Seq.empty,
     ciCheckWebsiteBuildProcess := Seq.empty,
-    scalaVersion               := "2.13.8",
+    scalaVersion               := scala213.value,
     ciTargetScalaVersions := makeTargetScalaMap(
       `zio-quickstart-encode-decode-json`,
       `zio-quickstart-sql`,
       `zio-quickstart-prelude`,
       `zio-quickstart-restful-webservice`
     ).value,
-    ciDefaultTargetJavaVersions := Seq("8"),
+    ciDefaultTargetJavaVersions := Seq("17"),
     semanticdbEnabled           := true,
     semanticdbVersion           := scalafixSemanticdb.revision
   )
@@ -45,10 +45,9 @@ lazy val root =
       testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
     )
 
-lazy val `zio-quickstart-hello-world`       = project
-lazy val `zio-quickstart-junit-integration` = project
-lazy val `zio-quickstart-restful-webservice` =
-  project.settings(scalaVersion := "3.3.3")
+lazy val `zio-quickstart-hello-world`                         = project
+lazy val `zio-quickstart-junit-integration`                   = project
+lazy val `zio-quickstart-restful-webservice`                  = project
 lazy val `zio-quickstart-restful-webservice-configurable-app` = project
 lazy val `zio-quickstart-restful-webservice-custom-logger`    = project
 lazy val `zio-quickstart-restful-webservice-dockerize`        = project
