@@ -41,6 +41,7 @@ lazy val root =
       `zio-quickstart-sql`
     )
     .settings(
+      run / fork := true,
       testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
     )
 
