@@ -31,7 +31,7 @@ object MainApp extends ZIOAppDefault {
           .serve(UserRoutes())
           .provide(
             Server.defaultWithPort(randomPort),
-            
+
             // A layer responsible for storing the state of the `counterApp`
             ZLayer.fromZIO(Ref.make(0)),
 

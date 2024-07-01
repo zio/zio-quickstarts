@@ -34,7 +34,7 @@ object MainApp extends ZIOAppDefault {
 
             // A layer responsible for storing the state of the `counterApp`
             ZLayer.fromZIO(Ref.make(0)),
-            
+
             // To use the persistence layer, provide the `PersistentUserRepo.layer` layer instead
             InmemoryUserRepo.layer
           )

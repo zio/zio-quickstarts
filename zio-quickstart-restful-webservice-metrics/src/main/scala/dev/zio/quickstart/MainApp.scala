@@ -36,10 +36,10 @@ object MainApp extends ZIOAppDefault {
 
             // To use the persistence layer, provide the `PersistentUserRepo.layer` layer instead
             InmemoryUserRepo.layer,
-      
+
             // General config for all metric backend
             metricsConfig,
-            
+
             // The Prometheus reporting layer
             prometheus.publisherLayer,
             prometheus.prometheusLayer

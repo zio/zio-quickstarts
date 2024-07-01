@@ -35,7 +35,7 @@ object MainApp extends ZIOAppDefault:
           )
           .provide(
             Server.defaultWithPort(randomPort),
-            
+
             // An layer responsible for storing the state of the `counterApp`
             ZLayer.fromZIO(Ref.make(0)),
 
