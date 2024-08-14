@@ -1,4 +1,3 @@
-
 package dev.zio.quickstart
 
 import dev.zio.quickstart.counter.CounterApp
