@@ -13,7 +13,8 @@ import zio.http._
 
 object MainApp extends ZIOAppDefault:
   def run =
-    Server
+    for {
+      serverFiber <- Server
       .serve(
         GreetingRoutes() ++ DownloadRoutes() ++ CounterRoutes() ++ UserRoutes()
       )
@@ -25,4 +26,19 @@ object MainApp extends ZIOAppDefault:
 
         // To use the persistence layer, provide the `PersistentUserRepo.layer` layer instead
         InmemoryUserRepo.layer
-      )
+      ).fork
+
+      // Add a shutdown hook to release the port on exit
+      _ <- ZIO.succeed {
+        java.lang.Runtime.getRuntime.addShutdownHook(new Thread {
+          override def run(): Unit = {
+            Unsafe.unsafe { implicit u =>
+              Runtime.default.unsafe.run(serverFiber.interrupt)
+            }
+          }
+        })
+      }
+
+      // Wait for the server to exit
+      _ <- serverFiber.join
+    } yield ()

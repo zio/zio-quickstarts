@@ -10,3 +10,5 @@ libraryDependencies ++= Seq(
 )
 
 resolvers ++= Resolver.sonatypeOssRepos("snapshots")
+
+Compile / mainClass := Some("dev.zio.quickstart.MainApp")
