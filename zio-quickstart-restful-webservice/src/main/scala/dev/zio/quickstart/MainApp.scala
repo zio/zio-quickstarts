@@ -15,18 +15,19 @@ object MainApp extends ZIOAppDefault:
   def run =
     for {
       serverFiber <- Server
-      .serve(
-        GreetingRoutes() ++ DownloadRoutes() ++ CounterRoutes() ++ UserRoutes()
-      )
-      .provide(
-        Server.defaultWithPort(8080),
+        .serve(
+          GreetingRoutes() ++ DownloadRoutes() ++ CounterRoutes() ++ UserRoutes()
+        )
+        .provide(
+          Server.defaultWithPort(8080),
 
-        // An layer responsible for storing the state of the `counterApp`
-        ZLayer.fromZIO(Ref.make(0)),
+          // An layer responsible for storing the state of the `counterApp`
+          ZLayer.fromZIO(Ref.make(0)),
 
-        // To use the persistence layer, provide the `PersistentUserRepo.layer` layer instead
-        InmemoryUserRepo.layer
-      ).fork
+          // To use the persistence layer, provide the `PersistentUserRepo.layer` layer instead
+          InmemoryUserRepo.layer
+        )
+        .fork
 
       // Add a shutdown hook to release the port on exit
       _ <- ZIO.succeed {
