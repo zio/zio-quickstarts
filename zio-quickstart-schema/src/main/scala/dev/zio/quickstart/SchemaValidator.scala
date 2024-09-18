@@ -11,7 +11,7 @@ object SchemaValidator extends ZIOAppDefault {
 
   import PrepareDataUtils._
 
-  val res = withFile(fileName)(file => ZIO.attempt(prepareData(file)))
+  val res = withFile(resourceName)(file => ZIO.attempt(getNameAndAgeOfPerson(file)))
 
   val runStream = ZStream
     .fromIterableZIO(res)
@@ -23,21 +23,21 @@ object SchemaValidator extends ZIOAppDefault {
 
     }
 
-  val b =  runStream
+  val listOfValidPersons =  runStream
     .runFold((List.empty[Person], List.empty[String])) {
       case ((valid, invalid), Right(person)) => (valid :+ person, invalid)  // Collect valid persons
       case ((valid, invalid), Left(error))   => (valid, invalid :+ error.toString)   // Collect errors
     }
 
 
-   def run=
+  def run=
      program
 
 
   val program =
     for {
       count <-  runStream.runFold(0)((accum, _) => accum + 1)
-      c <- b
+      c <- listOfValidPersons
       _     <- Console.printLine(s"Total count: ${c._2.size}")
     } yield ()
 
