@@ -39,7 +39,8 @@ lazy val root =
       `zio-quickstart-cache`,
       `zio-quickstart-prelude`,
       `zio-quickstart-stm`,
-      `zio-quickstart-sql`
+      `zio-quickstart-sql`,
+      `zio-quickstart-schema`,
     )
     .settings(
       testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
@@ -62,3 +63,4 @@ lazy val `zio-quickstart-cache`                               = project
 lazy val `zio-quickstart-prelude`                             = project
 lazy val `zio-quickstart-stm`                                 = project
 lazy val `zio-quickstart-sql`                                 = project
+lazy val `zio-quickstart-schema`                              = project
