@@ -6,10 +6,12 @@ import zio.schema.validation.Validation
 
 // one can choose the detailed way of validation or use annotations
 
-case class Person(name: String,
-                  @validate(Validation.greaterThan(18))
-                  age: Int)
+case class Person(
+    name: String,
+    @validate(Validation.greaterThan(18))
+    age: Int
+)
 
 object Person {
-    implicit val schema: Schema[Person] = DeriveSchema.gen
-}  
+  implicit val schema: Schema[Person] = DeriveSchema.gen
+}

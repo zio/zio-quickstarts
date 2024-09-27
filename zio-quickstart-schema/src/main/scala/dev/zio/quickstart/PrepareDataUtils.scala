@@ -19,14 +19,18 @@ object PrepareDataUtils {
 
   def withFile[A](name: String)(useFile: BufferedSource => Task[A]): Task[A] =
     ZIO.acquireReleaseWith(openFile(name))(closeFile)(useFile)
- def getNameAndAgeOfPerson(bufferedSourceFile: BufferedSource): List[Person] = {
+  def getNameAndAgeOfPerson(
+      bufferedSourceFile: BufferedSource
+  ): List[Person] = {
 
     def getPerson: Iterator[Person] = for {
-      line <- bufferedSourceFile.getLines().filter(incomingString => !incomingString.contains("Name"))
-      list  = line.split(",")
-      dob = list.reverse.head
-      name = list.head
-      age  = getAge(dob)
+      line <- bufferedSourceFile
+        .getLines()
+        .filter(incomingString => !incomingString.contains("Name"))
+      list   = line.split(",")
+      dob    = list.reverse.head
+      name   = list.head
+      age    = getAge(dob)
       person = Person(name, age)
     } yield person
 
@@ -34,13 +38,16 @@ object PrepareDataUtils {
 
   }
 
-  def getEmailOfPerson(bufferedSourceFile: BufferedSource): List[PersonWithEmail] = {
+  def getEmailOfPerson(
+      bufferedSourceFile: BufferedSource
+  ): List[PersonWithEmail] = {
 
     def getPersonWithEmail: Iterator[PersonWithEmail] = for {
-      line <- bufferedSourceFile.getLines().filter(incomingString => !incomingString.contains("Name"))
-      arr  = line.split(",")
+      line <- bufferedSourceFile
+        .getLines()
+        .filter(incomingString => !incomingString.contains("Name"))
+      arr   = line.split(",")
       emaii = arr(1)
-
 
       personWithEmail = PersonWithEmail(emaii)
     } yield personWithEmail
@@ -54,6 +61,4 @@ object PrepareDataUtils {
     currYear - LocalDate.parse(dob).getYear
   }
 
-} 
-
-
+}

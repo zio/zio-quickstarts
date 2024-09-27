@@ -40,7 +40,7 @@ lazy val root =
       `zio-quickstart-prelude`,
       `zio-quickstart-stm`,
       `zio-quickstart-sql`,
-      `zio-quickstart-schema`,
+      `zio-quickstart-schema`
     )
     .settings(
       testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
