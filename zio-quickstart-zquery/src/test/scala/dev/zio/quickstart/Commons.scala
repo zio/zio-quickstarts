@@ -9,32 +9,34 @@ import java.util.UUID
 
 object DatabaseQueriesActor {
 
-  object Customerr{
+  object Customerr {
 
     case class Customer(
-                         id: UUID,
-                         firstName: String,
-                         lastName: String,
-                         verified: Boolean,
-                         dob: LocalDate)
+        id: UUID,
+        firstName: String,
+        lastName: String,
+        verified: Boolean,
+        dob: LocalDate
+    )
 
-    implicit val customerschema= DeriveSchema.gen[Customer]
-    val customers = defineTableSmart[Customer]
+    implicit val customerschema = DeriveSchema.gen[Customer]
+    val customers               = defineTableSmart[Customer]
 
     val (customerid, firstName, lastName, verified, dob) = customers.columns
 
-    val all: List[Any] = customerid :: firstName :: lastName :: verified :: dob :: Nil
+    val all: List[Any] =
+      customerid :: firstName :: lastName :: verified :: dob :: Nil
 
   }
 
-  object Order{
+  object Order {
     case class Order(
-                      id: UUID,
-                      customerId: UUID,
-                      order_date: LocalDate,
-                    )
-    implicit val orderDetailsSchema = DeriveSchema.gen[Order]
-    val orderDetails = defineTableSmart[Order]
+        id: UUID,
+        customerId: UUID,
+        order_date: LocalDate
+    )
+    implicit val orderDetailsSchema  = DeriveSchema.gen[Order]
+    val orderDetails                 = defineTableSmart[Order]
     val (id, customerId, order_date) = orderDetails.columns
   }
 
@@ -45,7 +47,7 @@ object DatabaseQueriesActor {
       select(customerid, firstName, lastName, verified, dob)
         .from(customers)
         .to { case (id, firstName, lastName, verified, dob) =>
-         Customer(id, firstName, lastName, verified, dob)
+          Customer(id, firstName, lastName, verified, dob)
         }
 
     execute(query).runHead.map(_.get.id)
@@ -57,18 +59,19 @@ object DatabaseQueriesActor {
       select(customerid, firstName, lastName, verified, dob)
         .from(customers)
         .to { case (id, firstName, lastName, verified, dob) =>
-         Customer(id, firstName, lastName, verified, dob)
+          Customer(id, firstName, lastName, verified, dob)
         }
 
-    execute(query).runFold(List.empty[UUID]){
-      case (list, customer) => list :+ customer.id
+    execute(query).runFold(List.empty[UUID]) { case (list, customer) =>
+      list :+ customer.id
     }
   }
 
-  val id =  UUID.fromString("60b01fc9-c902-4468-8d49-3c0f989def37")
+  val id = UUID.fromString("60b01fc9-c902-4468-8d49-3c0f989def37")
 
-
-  def getSingleOrderbyCustomerIdDbQuery(customerId: UUID): ZIO[SqlDriver, Exception, Order.Order] = {
+  def getSingleOrderbyCustomerIdDbQuery(
+      customerId: UUID
+  ): ZIO[SqlDriver, Exception, Order.Order] = {
     val getSingleOrder =
       select(Order.id, Order.customerId, Order.order_date)
         .from(Order.orderDetails)
@@ -90,6 +93,5 @@ object DatabaseQueriesActor {
     execute(getallOrders).runCollect.map(_.toList)
 
   }
-
 
 }

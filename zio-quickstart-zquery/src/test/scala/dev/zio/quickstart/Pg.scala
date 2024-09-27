@@ -15,12 +15,12 @@ import java.sql.DriverManager
 object Pg extends JdbcRunnableSpec {
 
   def specLayered: Spec[Pg.JdbcEnvironment, Object] =
-    suite("Checking"){
-      test("er"){
-        for{
+    suite("Checking") {
+      test("er") {
+        for {
           url <- ZIO.succeed(getContainer.username)
-          _ <- ZIO.succeed("")
+          _   <- ZIO.succeed("")
         } yield assertTrue(url == "ew")
       }
-  }
+    }
 }

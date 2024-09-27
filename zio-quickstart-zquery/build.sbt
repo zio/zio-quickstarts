@@ -15,8 +15,7 @@ libraryDependencies ++= Seq(
   "org.testcontainers" % "database-commons"                % "1.19.7" % Test,
   "org.testcontainers" % "postgresql"                      % "1.19.7" % Test,
   "org.testcontainers" % "jdbc"                            % "1.19.7" % Test,
-  "com.dimafeng"      %% "testcontainers-scala-postgresql" % "0.41.3" % Test,
-  
+  "com.dimafeng"      %% "testcontainers-scala-postgresql" % "0.41.3" % Test
 )
 
 resolvers ++= Resolver.sonatypeOssRepos("snapshots")

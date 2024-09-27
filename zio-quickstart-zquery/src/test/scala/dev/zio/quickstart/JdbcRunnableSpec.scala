@@ -1,16 +1,19 @@
 package dev.zio.quickstart
 
-import com.dimafeng.testcontainers.{JdbcDatabaseContainer, PostgreSQLContainer, SingleContainer}
+import com.dimafeng.testcontainers.{
+  JdbcDatabaseContainer,
+  PostgreSQLContainer,
+  SingleContainer
+}
 import org.testcontainers.utility.DockerImageName
 import zio.sql.{ConnectionPool, ConnectionPoolConfig}
 import zio.{Scope, ZIO, ZLayer}
 import zio.sql.postgresql.PostgresJdbcModule
 import zio.test.{Spec, TestEnvironment, ZIOSpecDefault}
 
-
 import java.util.Properties
 
-trait JdbcRunnableSpec extends ZIOSpecDefault with PostgresJdbcModule  {
+trait JdbcRunnableSpec extends ZIOSpecDefault with PostgresJdbcModule {
 
   type JdbcEnvironment = TestEnvironment with SqlDriver
 
@@ -30,9 +33,9 @@ trait JdbcRunnableSpec extends ZIOSpecDefault with PostgresJdbcModule  {
   protected val autoCommit = false
 
   private[this] def connProperties(
-                                    user: String,
-                                    password: String
-                                  ): Properties = {
+      user: String,
+      password: String
+  ): Properties = {
     val props = new Properties
     props.setProperty("user", user)
     props.setProperty("password", password)
@@ -59,16 +62,17 @@ trait JdbcRunnableSpec extends ZIOSpecDefault with PostgresJdbcModule  {
   val connectionPool: ZLayer[Any, Throwable, ConnectionPool] =
     poolConfigLayer >>> ConnectionPool.live
 
-  private[this] val testContainer: ZIO[Any with Scope, Throwable, SingleContainer[_] with JdbcDatabaseContainer] =
+  private[this] val testContainer
+      : ZIO[Any with Scope, Throwable, SingleContainer[_]
+        with JdbcDatabaseContainer] =
     ZIO.acquireRelease {
       ZIO.attemptBlocking {
         val container = getContainer
         container.start()
         container
       }
-    }{ container =>
+    } { container =>
       ZIO.attemptBlocking(container.stop()).orDie
     }
-
 
 }
