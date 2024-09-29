@@ -38,3 +38,4 @@ $ sbt run
 - [ZIO STM](zio-quickstart-stm) - many thanks to [@jorge-vasquez-2301](https://github.com/jorge-vasquez-2301) and his [article](https://scalac.io/blog/how-to-write-a-completely-lock-free-concurrent-lru-cache-with-zio-stm/) for this example
 - [ZIO SQL](zio-quickstart-sql)
 - [ZIO Streams](zio-quickstart-streams)
+- [ZIO Schema](zio-quickstart-schema)
