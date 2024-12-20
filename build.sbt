@@ -9,12 +9,12 @@ inThisBuild(
     ciPostReleaseJobs          := Seq.empty,
     ciCheckWebsiteBuildProcess := Seq.empty,
     scalaVersion               := scala213.value,
-    ciTargetScalaVersions := targetScalaVersionsFor(
-      `zio-quickstart-encode-decode-json`,
-      `zio-quickstart-sql`,
-      `zio-quickstart-prelude`,
-      `zio-quickstart-restful-webservice`
-    ).value,
+//    ciTargetScalaVersions := targetScalaVersionsFor(
+//      `zio-quickstart-encode-decode-json`,
+//      `zio-quickstart-sql`,
+//      `zio-quickstart-prelude`,
+//      `zio-quickstart-restful-webservice`
+//    ).value,
     semanticdbEnabled           := true,
     semanticdbVersion           := scalafixSemanticdb.revision
   )
