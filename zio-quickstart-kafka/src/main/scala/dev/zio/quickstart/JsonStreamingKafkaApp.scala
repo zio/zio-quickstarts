@@ -61,7 +61,9 @@ object JsonStreamingKafkaApp extends ZIOAppDefault {
       ZIO.scoped {
         for {
           consumer <- Consumer.make(
-            ConsumerSettings(BOOSTRAP_SERVERS).withGroupId("streaming-kafka-app")
+            ConsumerSettings(BOOSTRAP_SERVERS).withGroupId(
+              "streaming-kafka-app"
+            )
           )
           _ <- consumer
             .plainStream(

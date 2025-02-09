@@ -22,7 +22,9 @@ object SimpleKafkaApp extends ZIOAppDefault {
           keyDeserializer = Serde.long,
           valueDeserializer = Serde.string
         ) { record =>
-          Console.printLine(s"Consumed ${record.key()}, ${record.value()}").orDie
+          Console
+            .printLine(s"Consumed ${record.key()}, ${record.value()}")
+            .orDie
         }
         .fork
 
