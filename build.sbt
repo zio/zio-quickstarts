@@ -9,15 +9,14 @@ inThisBuild(
     ciPostReleaseJobs          := Seq.empty,
     ciCheckWebsiteBuildProcess := Seq.empty,
     scalaVersion               := scala213.value,
-    ciTargetScalaVersions := makeTargetScalaMap(
+    ciTargetScalaVersions := targetScalaVersionsFor(
       `zio-quickstart-encode-decode-json`,
       `zio-quickstart-sql`,
       `zio-quickstart-prelude`,
       `zio-quickstart-restful-webservice`
     ).value,
-    ciDefaultTargetJavaVersions := Seq("17"),
-    semanticdbEnabled           := true,
-    semanticdbVersion           := scalafixSemanticdb.revision
+    ciTargetJavaVersions := Seq("17"),
+    semanticdbEnabled    := true
   )
 )
 
@@ -40,7 +39,8 @@ lazy val root =
       `zio-quickstart-prelude`,
       `zio-quickstart-stm`,
       `zio-quickstart-sql`,
-      `zio-quickstart-schema`
+      `zio-quickstart-schema`,
+      `zio-quickstart-zquery`
     )
     .settings(
       testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
@@ -64,3 +64,4 @@ lazy val `zio-quickstart-prelude`                             = project
 lazy val `zio-quickstart-stm`                                 = project
 lazy val `zio-quickstart-sql`                                 = project
 lazy val `zio-quickstart-schema`                              = project
+lazy val `zio-quickstart-zquery`                              = project

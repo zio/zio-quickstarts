@@ -8,50 +8,54 @@ import zio.kafka.serde._
 import zio.stream.ZStream
 
 object StreamingKafkaApp extends ZIOAppDefault {
-  private val BOOSTRAP_SERVERS = List("localhost:29092")
+  private val BOOSTRAP_SERVERS = List("localhost:9092")
   private val KAFKA_TOPIC      = "streaming-hello"
 
-  private val producer: ZLayer[Any, Throwable, Producer] =
-    ZLayer.scoped(
-      Producer.make(
-        ProducerSettings(BOOSTRAP_SERVERS)
-      )
-    )
+  private val producerSettings = ProducerSettings(BOOSTRAP_SERVERS)
+  private val consumerSettings =
+    ConsumerSettings(BOOSTRAP_SERVERS).withGroupId("streaming-kafka-app")
 
-  private val consumer: ZLayer[Any, Throwable, Consumer] =
-    ZLayer.scoped(
-      Consumer.make(
-        ConsumerSettings(BOOSTRAP_SERVERS)
-          .withGroupId("streaming-kafka-app")
-      )
-    )
+  def run: ZIO[Any, Throwable, Unit] = {
+    val p: ZIO[Any, Throwable, Unit] =
+      ZIO.scoped {
+        for {
+          producer <- Producer.make(producerSettings)
+          _ <- ZStream
+            .repeatZIO(Clock.currentDateTime)
+            .schedule(Schedule.spaced(1.second))
+            .map { time =>
+              new ProducerRecord(
+                KAFKA_TOPIC,
+                time.getMinute,
+                s"$time -- Hello, World!"
+              )
+            }
+            .via(producer.produceAll(Serde.int, Serde.string))
+            .runDrain
+        } yield ()
+      }
 
-  def run = {
-    val p: ZStream[Producer, Throwable, Nothing] =
-      ZStream
-        .repeatZIO(Clock.currentDateTime)
-        .schedule(Schedule.spaced(1.second))
-        .map { time =>
-          new ProducerRecord(
-            KAFKA_TOPIC,
-            time.getMinute,
-            s"$time -- Hello, World!"
-          )
-        }
-        .via(Producer.produceAll(Serde.int, Serde.string))
-        .drain
+    val c: ZIO[Any, Throwable, Unit] =
+      ZIO.scoped {
+        for {
+          consumer <- Consumer.make(consumerSettings)
+          _ <- consumer
+            .plainStream(
+              Subscription.topics(KAFKA_TOPIC),
+              Serde.int,
+              Serde.string
+            )
+            // do not use `tap` in prod because it destroys the chunking structure and leads to lower performance
+            // See https://zio.dev/zio-kafka/serialization-and-deserialization#a-warning-about-mapzio
+            .tap(r => Console.printLine("Consumed: " + r.value))
+            .map(_.offset)
+            .aggregateAsync(Consumer.offsetBatches)
+            .mapZIO(_.commit)
+            .runDrain
+        } yield ()
+      }
 
-    val c: ZStream[Consumer, Throwable, Nothing] =
-      Consumer
-        .plainStream(Subscription.topics(KAFKA_TOPIC), Serde.int, Serde.string)
-        // do not use `tap` it in prod because it destroys the chunking structure and leads to lower performance
-        .tap(r => Console.printLine(r.value))
-        .map(_.offset)
-        .aggregateAsync(Consumer.offsetBatches)
-        .mapZIO(_.commit)
-        .drain
-
-    (p merge c).runDrain.provide(producer, consumer)
+    p <&> c
   }
 
 }

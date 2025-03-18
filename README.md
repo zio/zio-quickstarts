@@ -39,3 +39,4 @@ $ sbt run
 - [ZIO SQL](zio-quickstart-sql)
 - [ZIO Streams](zio-quickstart-streams)
 - [ZIO Schema](zio-quickstart-schema)
+- [ZIO Zquery](zio-quickstart-zquery)
